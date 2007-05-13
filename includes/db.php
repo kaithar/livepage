@@ -15,7 +15,7 @@ function dbclose() {
 }
 
 
-$cuser = $_COOKIE["cuser"];
+$cuser = (isset($_COOKIE["cuser"]) ? $_COOKIE["cuser"] : "");
 $sql = "SELECT *
           FROM cms_sessions
           WHERE user_id='".mysql_real_escape_string($cuser['user_id'])."'
@@ -34,7 +34,7 @@ if(mysql_num_rows($result) == 1) {
                WHERE user_id='".mysql_real_escape_string($cuser['user_id'])."'
                  AND session_id='".mysql_real_escape_string($cuser['sid'])."'");
 } else {
-  $user = Array();
+  $user = Array("editcontent" => 0);
   $session = Array();
 }
 ?>
