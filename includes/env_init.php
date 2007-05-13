@@ -75,4 +75,10 @@ if (($config['dbname'] == "") or
 if ($failed == 1)
 	die("Failed to load config");
 
+
+/**
+ * Now to load the database
+ */
+require_once("includes/db.php");
+
 ?>

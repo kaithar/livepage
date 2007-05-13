@@ -1,6 +1,5 @@
 <?
-require_once ("includes/config.php");
-require_once("includes/db.php");
+require_once ("includes/env_init.php");
 require_once("templates/section.php");
 
 $vpath = explode("/","/index".$_SERVER['REQUEST_URI']);
