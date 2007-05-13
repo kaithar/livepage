@@ -1,3 +1,5 @@
+Options Indexes Multiviews FollowSymLinks
+
 php_flag magic_quotes_gpc off
 
 RewriteEngine On
