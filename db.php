@@ -1,5 +1,5 @@
 <?php
-include("config.php");
+require ("includes/config.php");
 
 $link = mysql_connect("localhost", $dbuser, $dbpass)
 	or die("Could not connect");
