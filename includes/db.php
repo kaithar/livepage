@@ -15,7 +15,7 @@ function dbclose() {
 }
 
 
-$cuser = (isset($_COOKIE["cuser"]) ? $_COOKIE["cuser"] : Array("user_id" => 0, sid => ""));
+$cuser = (isset($_COOKIE["cuser"]) ? $_COOKIE["cuser"] : Array("user_id" => 0, "sid" => ""));
 $sql = "SELECT *
           FROM cms_sessions
           WHERE user_id='".mysql_real_escape_string($cuser['user_id'])."'
