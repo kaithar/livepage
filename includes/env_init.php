@@ -62,9 +62,9 @@ else
 /**
  * Database config stuff ... no defaults
  */
-if (($config['dbname'] == "") or
-		($config['dbuser'] == "") or
-		($config['dbpass'] == ""))
+if (($config['db_name'] == "") or
+		($config['db_user'] == "") or
+		($config['db_pass'] == ""))
 {
 	$failed = 1;
 }
