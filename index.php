@@ -69,7 +69,7 @@ if ($special_include)
 else
 {
   $showpage = 1;
-  if (($vfile[1]) && ($user['editcontent'] == 1))
+  if ((count($vfile) >= 2) && ($user['editcontent'] == 1))
   {
     $showpage = 0;
     switch ($vfile[1])
