@@ -60,6 +60,8 @@ while (count($vpath) > 1)
 $parent_path = preg_replace("|/[^/]*$|","",$parent_path);
 //echo $parent_path;
 
+$content = "";
+
 if ($special_include)
 {
   include($special_include);
@@ -111,6 +113,7 @@ else
     else
     {
 //    $links = "&nbsp;&nbsp;&nbsp;Content list:<br><br>";
+      $links = "";
       $body = "";
       $last = mysql_num_rows($mysections)-1;
       while ($section = mysql_fetch_assoc($mysections)) 
