@@ -1,12 +1,12 @@
 <?php
 
-$link = mysql_connect("localhost", $dbuser, $dbpass)
+$link = mysql_connect("localhost", $config['db_user'], $config['db_pass'])
 	or die("Could not connect");
-mysql_select_db($dbname)
+mysql_select_db($config['db_name'])
 	or die("Could not select database");
 
 function mysql_do_query($sql, $comment = "") {
-        $result = mysql_query($sql) or die("Sql Error!<br><br>$sql<br><br>".mysql_error()); 
+	$result = mysql_query($sql) or die("Sql Error!<br><br>$sql<br><br>".mysql_error()); 
 	return $result;
 }
 
