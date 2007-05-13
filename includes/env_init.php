@@ -22,8 +22,8 @@ $config['debug'] = 0;
  * Load global config
  */
 
-include('config.php')
-		or die("Please configure the software");
+if (!(include('config.php')))
+	die("Please configure the software");
 
 /**
  * In multisite mode, use the domain name requested to load settings
@@ -36,8 +36,8 @@ if ($config['vhosts'] == 1)
 	 */
 	$domain = $_SERVER['HTTP_HOST'];
 	preg_replace("/^www\./","",$domain);
-	include ('domains/'.$domain)
-			or die("I'm sorry, unable to find a site by that name.");
+	if (!(include ('domains/'.$domain.'.php')))
+		die("I'm sorry, unable to find a site by that name.");
 }
 
 /**
