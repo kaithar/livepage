@@ -1,17 +1,20 @@
--- phpMyAdmin SQL Dump
--- version 2.10.0.2
--- http://www.phpmyadmin.net
--- 
--- Host: localhost
--- Generation Time: May 14, 2007 at 07:06 AM
--- Server version: 5.0.38
--- PHP Version: 5.2.2-pl1-gentoo
+-- LivePage Schema ... pending installer...
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
+-- --------------------------------------------------------
+--
+-- Table cms_config
 -- 
--- Database: `lp_livepage_test`
--- 
+CREATE TABLE `cms_config` (
+`db_revision` INT UNSIGNED NOT NULL default '1',
+`site_name` VARCHAR( 255 ) NOT NULL default '',
+`lock_message` VARCHAR( 255 ) NULL
+) ENGINE = MYISAM DEFAULT CHARSET=latin1;
+
+INSERT INTO `cms_config`
+	(`db_revision` ,`site_name` ,`lock_message`)
+	VALUES ('1', 'LivePage', NULL);
 
 -- --------------------------------------------------------
 
@@ -43,6 +46,12 @@ CREATE TABLE `cms_pages` (
   UNIQUE KEY `page_key` (`page_key`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
 
+INSERT INTO `cms_pages`
+	(`page_id`,`page_parent` ,`page_key` ,`page_title`, `page_include`)
+	VALUES
+  ('1','0', 'index', "Welcome", NULL),
+	('2','1', 'login', "Login", "pages/login.php");
+
 -- --------------------------------------------------------
 
 -- 
@@ -57,6 +66,10 @@ CREATE TABLE `cms_sections` (
   `section_text` longtext NOT NULL,
   PRIMARY KEY  (`section_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 PACK_KEYS=1 AUTO_INCREMENT=0 ;
+
+INSERT INTO `cms_sections`
+	(`page_id`, `order`, `section_title`, `section_text`)
+	VALUES ('1', '0', "Welcome...", "LivePage has been sucessfully installed.<br/>Enjoy!.");
 
 -- --------------------------------------------------------
 
@@ -86,3 +99,7 @@ CREATE TABLE `cms_users` (
   `editcontent` tinyint(4) NOT NULL,
   PRIMARY KEY  (`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
+
+INSERT INTO `cms_users`
+	(`uname`, `password`, `displayname`, `editcontent`)
+	VALUES ('admin', MD5("admin"), "Administrator", 1);
