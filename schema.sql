@@ -30,6 +30,24 @@ CREATE TABLE `cms_menu` (
   PRIMARY KEY  (`item_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
 
+
+-- --------------------------------------------------------
+--
+-- Structure for cms_categories
+--
+CREATE TABLE `cms_categories` (
+`cat_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`cat_parent` INT UNSIGNED NOT NULL DEFAULT '1',
+`cat_key` VARCHAR( 255 ) NOT NULL ,
+`cat_title` VARCHAR( 255 ) NOT NULL ,
+INDEX ( `cat_parent` ) ,
+UNIQUE (`cat_key`)
+) ENGINE = MYISAM ;
+
+INSERT INTO `cms_categories` 
+	(`cat_id` ,`cat_parent` ,`cat_key` ,`cat_title`)
+	VALUES ('1', '0', '', 'Home');
+
 -- --------------------------------------------------------
 
 -- 
@@ -38,7 +56,7 @@ CREATE TABLE `cms_menu` (
 
 CREATE TABLE `cms_pages` (
   `page_id` int(10) unsigned NOT NULL auto_increment,
-  `page_parent` int(10) NOT NULL default '1',
+  `page_category` int(10) NOT NULL default '1',
   `page_key` varchar(255) NOT NULL default '',
   `page_title` varchar(255) NOT NULL default '',
   `page_include` varchar(255) default NULL,
@@ -47,9 +65,9 @@ CREATE TABLE `cms_pages` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
 
 INSERT INTO `cms_pages`
-	(`page_id`,`page_parent` ,`page_key` ,`page_title`, `page_include`)
+	(`page_id`,`page_category` ,`page_key` ,`page_title`, `page_include`)
 	VALUES
-  ('1','0', 'index', "Welcome", NULL),
+	('1','1', 'index', "Welcome", NULL),
 	('2','1', 'login', "Login", "pages/login.php");
 
 -- --------------------------------------------------------
