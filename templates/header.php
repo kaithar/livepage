@@ -47,11 +47,11 @@
        $c = "";
        foreach ($path as $v)
        {
-         $c .= $v["page_key"];
-         if ($c == "index") $c = "";
-         echo " &raquo; <a href=\"/$c\">{$v["page_title"]}</a>";
-         if ($c) $c .= "/";
+         $c .= $v["cat_key"]."/";
+         echo " &raquo; <a href=\"$c\">{$v["cat_title"]}</a>";
        }
+			 if ($page["page_key"] != "index")
+			 	echo " &raquo; <a href=\"$c{$page["page_key"]}\">{$page["page_title"]}</a>";
      ?>
      <br/>
      <br/>
