@@ -1,6 +1,7 @@
 <?php
 
-if ($_POST['Login']) {
+if (isset($_POST['Login']))
+{
   $username = $_POST['uname'];
   $pass = $_POST['pass'];
   $errors = Array();
@@ -49,7 +50,9 @@ if ($_POST['Login']) {
 }
 
 $content .= section("Login...",'<form method="POST" action="/login">
-					Username: <input type="text" name="uname"><br>
-					Password: <input type="password" name="pass"><br>
-					<input type="submit" name="Login" value="Login"></form>');
+					<table border="0" cellpadding="3">
+						<tr><td>Username:</td><td><input type="text" name="uname"/></td></tr>
+						<tr><td>Password:</td><td><input type="password" name="pass"/></td></tr>
+						<tr><td colspan=2><input type="submit" name="Login" value="Login"/></td></tr>
+					</table></form>');
 ?>
