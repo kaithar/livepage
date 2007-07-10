@@ -1,155 +1,225 @@
-<?
+<?php
+
+/*****************************************************************************************************
+ * Set 'em up, boys.
+ */
+
 require_once ("includes/env_init.php");
 require_once("templates/section.php");
 
-$vpath = explode("/","/index".$_SERVER['REQUEST_URI']);
+// $_SERVER['REQUEST_URI'] is like "/foo/bar"
+$requested = $_SERVER['REQUEST_URI'];
 
-$parent = 0;
-$special_include = 0;
+/*****************************************************************************************************
+ * This code is designed to match "/foo/" and "/foo/.handler".
+ * It inserts index, converting the url to "/foo/index" and "/foo/index.handler" respectively.
+ */
 
+if (preg_match("|^((?:.*/)+)(\.[^/]*)?$|U", $requested, $matches))
+{
+	if (count($matches) == 2)
+		$requested = $matches[1]."index";
+	else
+		$requested = $matches[1]."index".$matches[2];
+}
+
+/*****************************************************************************************************
+ * Process the request, building an array of it's components.
+ */
+
+$vpath = explode("/",$requested);
 $path = Array();
+$parent = 0;
 $parent_path = "";
 
 while (count($vpath) > 1)
 {
-  // First pass removes a blank, each sucessive pass removes the previous node...
-  array_shift(&$vpath);
+  $vfile = explode(".", array_shift(&$vpath)); // Explode the next path component
+  
+  // Try to get said path component (note, the root category has a blank key and 0 parent)
+  $mycat = mysql_do_query("SELECT *
+			                       FROM `cms_categories` 
+                            WHERE `cat_key`='".mysql_real_escape_string($vfile[0])."' 
+                              AND `cat_parent` = '".mysql_real_escape_string($parent)."'
+                            LIMIT 1");
 
-  // Explode the current first one...
-  $vfile_ = explode(".",$vpath[0]);
-
-  if (($vfile_[0] == "") || (($vfile_[0] == "index") && ($parent != 0))) 
+  if (mysql_num_rows($mycat) != 1)
   {
-    $vfile_[0] = $vfile[0];
-    $vfile = $vfile_;
-    break;
+		// Category doesn't exist ... fake it.
+		$cat = Array();
+		$cat['found'] = false;
+		$cat['cat_key'] = $vfile[0];
+		$cat['cat_title'] = $vfile[0];
+		$cat['cat_id'] = -1;
+		$cat['parent'] = $parent;
   }
+	else
+	{
+  	// We have a cat, so it needs to be properly treated... with cat nip :P
+  	$cat = mysql_fetch_assoc($mycat);
+		$cat['found'] = true;
+	}
 
-  $vfile = $vfile_;
-  $request = $vfile[0];
+	$cat['parent_path'] = $parent_path ? $parent_path : "/";
+  $path[] = $cat;
+  $parent_path .= $cat['cat_key']."/";
 
-  $mypage = mysql_do_query("SELECT * FROM `cms_pages` 
-				  WHERE `page_key`='".mysql_real_escape_string($request)."' 
-				    AND `page_parent` = '".mysql_real_escape_string($parent)."'
-				  LIMIT 1");
-
-  if (mysql_num_rows($mypage) != 1)
-  {
-    if ($vfile[1] != "create")
-      $special_include = "pages/404.php";
-    break;
-  }
- 
-  $page = mysql_fetch_assoc($mypage);
-
-  $page['parent_url'] = $parent_path ? $parent_path : "/";
-  $path[] = $page;
-
-  $parent_path .= "/".$page['page_key'];
-  if ($parent_path == "/index") $parent_path = "";
-
-  if ($page["page_include"])
-  {
-    $special_include = $page["page_include"];
-    break;
-  }
-  $parent = $page['page_id'];
+  // And on to the next component we go.
+  $parent = $cat['cat_id']; 
 }
 
-//echo $parent_path. " | ";
-$parent_path = preg_replace("|/[^/]*$|","",$parent_path);
-//echo $parent_path;
+/*****************************************************************************************************
+ * Process the page request
+ */
 
-$content = "";
+// If we're rendering a normal page...
+$vfile = explode(".",$vpath[0]);
 
-if ($special_include)
+$mypage = mysql_do_query("SELECT *
+		                        FROM `cms_pages` 
+				                   WHERE `page_key`='".mysql_real_escape_string($vfile[0])."' 
+				                     AND `page_category` = '".mysql_real_escape_string($parent)."'
+				                   LIMIT 1");
+
+if (mysql_num_rows($mypage) != 1)
 {
-  include($special_include);
+	// Fake it baby!
+  $page = Array();
+	$page['found'] = false;
+	$page['page_key'] = $vfile[0];
+	$page['page_title'] = $vfile[0];
+	$page['page_id'] = -1;
+	$page['parent'] = $parent;
+	$page['page_include'] = "pages/404.php";
 }
 else
 {
-  $showpage = 1;
-  if ((count($vfile) >= 2) && ($user['editcontent'] == 1))
-  {
-    $showpage = 0;
-    switch ($vfile[1])
-    {
-      case "create":
-        include("specials/create.php");
-        break;
-      case "createsection":
-        include("specials/createsection.php");
-        break;
-      case "swap":
-        include("specials/swap.php");
-        break;
-      case "edit":
-        include("specials/edit.php");
-        break;
-      case "del":
-        include("specials/del.php");
-        break;
-      case "delpage":
-        include("specials/delpage.php");
-        break;
-      case "edittitle":
-        include("specials/edittitle.php");
-        break;
-      case "move":
-        include("specials/move.php");
-        break;
-      default:
-        $showpage = 1;
-    }
-  }
-  if ($showpage)
-  {
-    $mysections = mysql_do_query("SELECT * FROM `cms_sections`
-					WHERE `page_id`='".mysql_real_escape_string($page['page_id'])."' ORDER BY `order` ASC");
-    if (mysql_num_rows($mysections) == 0)
-    {
-      $content .= "This page appears to be empty...";
-    }
-    else
-    {
-//    $links = "&nbsp;&nbsp;&nbsp;Content list:<br><br>";
-      $links = "";
-      $body = "";
-      $last = mysql_num_rows($mysections)-1;
-      while ($section = mysql_fetch_assoc($mysections)) 
-      {
-//      $links .= '<a class="contentmenuitem" href="#s'.$section['order'].'">'.($section['order']+1).'. '.$section['section_title'].'</a>';
-        $body .= section(
-          '<a name="s'.$section['order'].'"/>'.$section['section_title'].
-          (
-            ($user['editcontent'] == 1)
-            ?'<div style="float:right;position:relative;top:-1.2em;">(Move '.
-              (
-                ($section['order']>0)
-                ?'<a href="'.$request.'.swap.'.($section['order']-1).'.'.$section['order'].'">Up</a>'
-                :'Up'
-              ).
-              ' or '.
-              (
-                ($section['order'] != $last)
-                ?'<a href="'.$request.'.swap.'.$section['order'].'.'.($section['order']+1).'">Down</a>'
-                :'Down'
-              ).
-              ', <a href="'.$request.'.edit.'.$section['section_id'].'">Edit</a>'.
-              ', <a href="'.$request.'.del.'.$section['section_id'].'">Del</a>)</div>'
-            :''
-          ).
-          '&nbsp;',
-          nl2br($section['section_text'])
-        );
-      }
-      $content .= $links . $body;
-    }
-  }
+  $page = mysql_fetch_assoc($mypage);
+	$page['found'] = true;
 }
+
+$page['parent_path'] = $parent_path ? $parent_path : "/";
+$page['params'] = array_slice($vfile,1);
+	
+
+/*****************************************************************************************************
+ * Process specials
+ */
+
+$content = "";
+
+/* showpage is there to allow the specials to override page display.
+ * Set to 1 it renders, set it to 0 to not show it.
+ */
+$showpage = 1;
+
+// If you can't edit the page, you can't use the handlers.
+if ($page['params'] && ($user['editcontent'] == 1))
+{
+	// Unless the special otherwise instructs it, the page won't display
+	$showpage = 0;
+	switch ($page['params'][0])
+	{
+		case "create":
+			include("specials/create.php");
+			break;
+		case "createsection":
+			include("specials/createsection.php");
+			break;
+		case "swap":
+			include("specials/swap.php");
+			break;
+		case "edit":
+			include("specials/edit.php");
+			break;
+		case "del":
+			include("specials/del.php");
+			break;
+		case "delpage":
+			include("specials/delpage.php");
+			break;
+		case "edittitle":
+			include("specials/edittitle.php");
+			break;
+		case "move":
+			include("specials/move.php");
+			break;
+		default:
+			// This is probably caused by someone requesting a page with an extension (eg, index.htm)
+			$showpage = 1;
+	}
+}
+
+/*****************************************************************************************************
+ * Call out for special includes
+ * TODO: This represents a potential security hole and should be removed.
+ */
+
+if ($showpage && $page["page_include"])
+{
+	$showpage = 0;
+  include($page["page_include"]);
+}
+
+/*****************************************************************************************************
+ * Render the page if required.
+ */
+
+if ($showpage)
+{
+  $mysections = mysql_do_query("SELECT *
+                                  FROM `cms_sections`
+                                 WHERE `page_id`='".mysql_real_escape_string($page['page_id'])."'
+                              ORDER BY `order` ASC");
+	
+	if (mysql_num_rows($mysections) == 0)
+	{
+		$content .= "This page appears to be empty...";
+	}
+	else
+	{
+    // $links = "&nbsp;&nbsp;&nbsp;Content list:<br><br>";
+		$links = "";
+		$body = "";
+		$last = mysql_num_rows($mysections)-1;
+		while ($section = mysql_fetch_assoc($mysections)) 
+		{
+      // $links .= '<a class="contentmenuitem" href="#s'.$section['order'].'">'.($section['order']+1).'. '.$section['section_title'].'</a>';
+			$body .= section(
+				'<a name="s'.$section['order'].'"/>'.$section['section_title'].
+				(
+					($user['editcontent'] == 1)
+					?'<div style="float:right;position:relative;top:-1.2em;">(Move '.
+						(
+							($section['order']>0)
+							?'<a href="'.$request.'.swap.'.($section['order']-1).'.'.$section['order'].'">Up</a>'
+							:'Up'
+						).
+						' or '.
+						(
+							($section['order'] != $last)
+							?'<a href="'.$request.'.swap.'.$section['order'].'.'.($section['order']+1).'">Down</a>'
+							:'Down'
+						).
+						', <a href="'.$request.'.edit.'.$section['section_id'].'">Edit</a>'.
+						', <a href="'.$request.'.del.'.$section['section_id'].'">Del</a>)</div>'
+					:''
+				).
+				'&nbsp;',
+				nl2br($section['section_text'])
+			);
+		}
+		$content .= $links . $body;
+	}
+}
+
+/*****************************************************************************************************
+ * We should have some content, render it then close the database.
+ */
 
 include("templates/header.php");
 echo $content;
 include("templates/footer.php");
 dbclose();
+
 ?>
