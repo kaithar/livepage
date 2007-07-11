@@ -1,6 +1,7 @@
- trunk - Dev Branch (r28)
+ trunk - Dev Branch (r29)
 ==========================
  
+ - Noted in INSTALL that a www. prefix will be stripped off the hostname. (r29)
  - Wrote CHANGES (r28)
  - Placed text in INSTALL and README (r27)
  - QA and html tweaking (r26)

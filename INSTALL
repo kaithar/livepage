@@ -23,6 +23,7 @@ Install instructions:
   LivePage requires a mysql database for each distinct site it is going to run.
   At a later date you may use site prefixes to run multiple sites off the same database, but we generally don't recomend it.
   If you wish to run the -same- site on two or more domains, using just one database is covered in vhosting.
+  Please note that the www. subdomain will be stripped off the begining of the domain name.
    
 3/ Global configuration.
 
@@ -34,7 +35,7 @@ Install instructions:
 4/ Localised configuration.
 
   Create a config file for each domain you wish to host on this install.
-  Files should be named like domains/livepage.net.php and can contain any settings listed in config.example.php.
+  Files should be named like domains/livepage.org.uk.php and can contain any settings listed in config.example.php.
   
   The localised config settings are only loaded if you set $config['vhosts'] to 1 in config.php.
   If you wish to load multiple sites on the same database (domain.com and domain.net for instance), input the same database settings in to both files.
