@@ -1,0 +1,53 @@
+ 
+LivePage version 0.0.0+svn
+
+Copyright the-cell.co.uk
+For Licencing, see LICENCE
+ 
+Install instructions:
+ 
+1/ Aquire source. 
+   
+  Download and unpack the release tarball or grab a copy of svn.
+  Since you are reading this, you probably don't need to be told this, as you already have done so or should know to ;)
+  
+  Running SVN is not recommended for production environments because we will break the DEVELOPMENT tree occasionally.
+  Just to make sure the developers are paying attention, ya see.
+  Consider yourself warned :P
+   
+2/ Creating databases.
+   
+  Create mysql database and user for each site necessary and load schema.sql.
+  At some point in the future, this step will be automated.
+  
+  LivePage requires a mysql database for each distinct site it is going to run.
+  At a later date you may use site prefixes to run multiple sites off the same database, but we generally don't recomend it.
+  If you wish to run the -same- site on two or more domains, using just one database is covered in vhosting.
+   
+3/ Global configuration.
+
+  Copy config.example.php to config.php, review it's contents and edit as required.
+
+  Without a config.php, bad things happen.
+  Not following instructions will probably lead you to stress.
+  
+4/ Localised configuration.
+
+  Create a config file for each domain you wish to host on this install.
+  Files should be named like domains/livepage.net.php and can contain any settings listed in config.example.php.
+  
+  The localised config settings are only loaded if you set $config['vhosts'] to 1 in config.php.
+  If you wish to load multiple sites on the same database (domain.com and domain.net for instance), input the same database settings in to both files.
+  
+  Do not include database settings in config.php if you specify that you wish to use the vhosting code.
+  If you tell it you want to use vhosts, certain settings will only be loaded from the localised configs.
+  If you tell it you don't want to use vhosts, localised configs will be ignored.
+  
+5/ Almost done...
+
+  You should now have a working install.  Well done.
+  
+  Next please go and change the admin pass (defaults to admin).
+  You may also wish to customise your site, as the default settings are rather boring.
+  
+ 

@@ -1,0 +1,21 @@
+ 
+LivePage version 0.0.0+svn
+
+Copyright the-cell.co.uk
+For Licencing, see LICENCE
+For Install instructions, see INSTALL
+
+
+LivePage is a simple cms package designed primarily for easy of use and hosting multiple sites off a single install.
+
+Currently, LivePage is in a development state... please don't expect it to be perfect, because it isn't.
+
+Requirements:
+  PHP (tested on 5.2.2, should work on earlier versions.  Please open a bug if you can confirm a specific setup.)
+  MySQL
+  Apache (may work under other http servers, but no promises)
+
+If you have a problem, please file a bug on http://bugs.the-cell.co.uk under the LivePage project.
+Try to include as much information as possible, but don't post anything sensitive (passwords and the such).
+
+This file may be updated with some sort of features list at some point.
