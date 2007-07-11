@@ -8,7 +8,7 @@ $foo .= "Perhaps you can find the desired page using the site navigation?";
 
 if ($user['editcontent'] == 1) 
 {
-  $foo .= "<br/><br/>Click <a href=\"{$page['parent_path']}/{$page['page_key']}.create\">here</a> to create this page and the required categories.";
+  $foo .= "<br/><br/>Click <a href=\"{$page['parent_path']}{$page['page_key']}.create\">here</a> to create this page and the required categories.";
 }
 
 $content .= section("Ooops!",$foo);
