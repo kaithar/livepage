@@ -1,0 +1,26 @@
+ trunk - Dev Branch (r28)
+==========================
+ 
+ - Wrote CHANGES (r28)
+ - Placed text in INSTALL and README (r27)
+ - QA and html tweaking (r26)
+ - Rewrite of core code relating to url decoding, categories, specials and 404 handling (see r25 log for full details.)
+ - Adjusted header.php to work with categories (r24)
+ - Adjusted 404.php to work with the new core code (r23)
+ - Added Categories to the database (r22, bug #2)
+ - Added some initial data to db schema (r21)
+ - Added placeholder table to db schema for config data (r21)
+ - Added placeholders for documentation (r20, bug #10)
+ - Added LivePage logo v1 (r19)
+
+ Release 0.0.0 - Base reference (r18)
+======================================
+ 
+ - Added reference db dump. (r17)
+ - Code QA and bugfixing (r11,12,13,14,15)
+ - Rearranged some files (r5)
+ - Reworked config code (r4,6,8,9,10)
+ - Added .htaccess with the options required to make the software function correctly. (r3)
+ 
+ Import (r2)
+=============
