@@ -1,6 +1,9 @@
- trunk - Dev Branch (r29)
+ trunk - Dev Branch (r37)
 ==========================
  
+ - Tweak to 404.php to remove the redundant '/' causing the create link to break (r35)
+ - Made create.php work with the new category system. (r33,34,36,37)
+ - Fixed and improved the admin menu in header.php (r30,31,32)
  - Noted in INSTALL that a www. prefix will be stripped off the hostname. (r29)
  - Wrote CHANGES (r28)
  - Placed text in INSTALL and README (r27)
