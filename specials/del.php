@@ -1,4 +1,5 @@
-<?
+<?php
+
 if (isset($page['params'][1]) && isset($page['params'][2]) && ($page['params'][2] == "CONFIRM"))
 {
   $page_id = mysql_real_escape_string($page['page_id']);
