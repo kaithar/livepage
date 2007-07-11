@@ -2,7 +2,7 @@
 
 if ($page['found'] == false)
 {
-	for ($path as $cat)
+	foreach ($path as $cat)
 	{
 		if ($cat['found'])
 			print "Already have {$cat['key']}<br/>";
