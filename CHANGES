@@ -1,6 +1,14 @@
- trunk - Dev Branch (r37)
+ trunk - Dev Branch (r48)
 ==========================
  
+ - Update specials/move.php to work with new variables (r48)
+ - Update specials/edittitle.php to work with the new variables (r47)
+ - Update specials/edit.php to work with the new variables (r46)
+ - Update specials/delpage.php to work with the new variables and category code (r44,45)
+ - Minor stylistic change to del.php (r43)
+ - Update specials/del.php (section delete) to work with the new variables (r42)
+ - Add $cat['path'] and $page['path'], change references in index from $request to $page['path'] (r40,41)
+ - Adjust createsection.php to work with the removal of the $request global, also fix some warnings. (r39)
  - Tweak to 404.php to remove the redundant '/' causing the create link to break (r35)
  - Made create.php work with the new category system. (r33,34,36,37)
  - Fixed and improved the admin menu in header.php (r30,31,32)
