@@ -1,4 +1,22 @@
 <?php
+
+if ($page['found'] == false)
+{
+	for ($path as $cat)
+	{
+		if ($cat['found'])
+			print "Already have {$cat['key']}<br/>";
+		else
+			print "Need to create {$cat['key']}<br/>";
+	}
+	print "Need to create {$page['key']}<br/>";
+	die();
+}
+
+print "Already have {$page['key']}<br/>";
+
+die();
+
 if (mysql_num_rows($mypage) == 0)
 {
   // Okie, this page definitely doesn't exist, so create it!
