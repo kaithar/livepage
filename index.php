@@ -100,7 +100,7 @@ else
 }
 
 $page['parent_path'] = $parent_path ? $parent_path : "/";
-$path['path'] = $parent_path.$page['page_key'];
+$page['path'] = $parent_path.$page['page_key'];
 $page['params'] = array_slice($vfile,1);
 	
 
