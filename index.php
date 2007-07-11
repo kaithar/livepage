@@ -63,6 +63,7 @@ while (count($vpath) > 1)
 	$cat['parent_path'] = $parent_path ? $parent_path : "/";
   $path[] = $cat;
   $parent_path .= $cat['cat_key']."/";
+	$cat['path'] = $parent_path;
 
   // And on to the next component we go.
   $parent = $cat['cat_id']; 
@@ -99,6 +100,7 @@ else
 }
 
 $page['parent_path'] = $parent_path ? $parent_path : "/";
+$path['path'] = $parent_path.$page['page_key'];
 $page['params'] = array_slice($vfile,1);
 	
 
@@ -192,17 +194,17 @@ if ($showpage)
 					?'<div style="float:right;position:relative;top:-1.2em;">(Move '.
 						(
 							($section['order']>0)
-							?'<a href="'.$request.'.swap.'.($section['order']-1).'.'.$section['order'].'">Up</a>'
+							?'<a href="'.$page['path'].'.swap.'.($section['order']-1).'.'.$section['order'].'">Up</a>'
 							:'Up'
 						).
 						' or '.
 						(
 							($section['order'] != $last)
-							?'<a href="'.$request.'.swap.'.$section['order'].'.'.($section['order']+1).'">Down</a>'
+							?'<a href="'.$page['path'].'.swap.'.$section['order'].'.'.($section['order']+1).'">Down</a>'
 							:'Down'
 						).
-						', <a href="'.$request.'.edit.'.$section['section_id'].'">Edit</a>'.
-						', <a href="'.$request.'.del.'.$section['section_id'].'">Del</a>)</div>'
+						', <a href="'.$page['path'].'.edit.'.$section['section_id'].'">Edit</a>'.
+						', <a href="'.$page['path'].'.del.'.$section['section_id'].'">Del</a>)</div>'
 					:''
 				).
 				'&nbsp;',
