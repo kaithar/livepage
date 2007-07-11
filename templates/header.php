@@ -32,10 +32,13 @@
          <div class="linkbox">
           <center><b>Admin</b></center>
           <div class="links">
-           <a href="<?php echo $parent_path."/".$request;?>.createsection">New Section</a>
-           <a href="<?php echo $parent_path."/".$request;?>.edittitle">Edit Title</a>
-           <a href="<?php echo $parent_path."/".$request;?>.move">Move</a>
-           <a href="<?php echo $parent_path."/".$request;?>.delpage">Nuke Page</a>
+					 <?php if ($page['found'])
+				   { ?>
+             <a href="<?php echo $page['parent_path']."/".$page['key'];?>.createsection">New Section</a>
+             <a href="<?php echo $page['parent_path']."/".$page['key'];?>.edittitle">Edit Title</a>
+             <a href="<?php echo $page['parent_path']."/".$page['key'];?>.move">Move</a>
+             <a href="<?php echo $page['parent_path']."/".$page['key'];?>.delpage">Nuke Page</a>
+					 <?php } ?>
           </div>
          </div>
          <?php
