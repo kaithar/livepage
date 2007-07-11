@@ -1,8 +1,8 @@
 <?
 
-if (mysql_num_rows($mypage) == 1)
+if ($page['found'])
 {
-  if ($_POST['Submit'] == "Submit")
+  if (isset($_POST['Submit']))
   {
     $page_id = mysql_real_escape_string($page['page_id']);
     
@@ -18,10 +18,11 @@ if (mysql_num_rows($mypage) == 1)
                                 `order`='$order', 
                                 `section_title`='$title',
                                 `section_text`='$content'");
-    header("location: ".$request);
+    header("location: ".$page['parent_path'].$page['page_key']);
     die();
   }
-  $c = "<form action=\"$request.createsection\" method=\"POST\">";
+	
+  $c = "<form action=\"{$page['parent_path']}{$page['page_key']}.createsection\" method=\"POST\">";
   $c .= "Section title:<br><input type=\"text\" name=\"title\" size=\"95\"><br><br>";
   $c .= "Content:<br><textarea name=\"content\" cols=\"80\" rows=\"10\"></textarea><br>";
   $c .= "<input type=\"Submit\" name=\"Submit\" value=\"Submit\"></form>";
