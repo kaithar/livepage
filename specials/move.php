@@ -15,7 +15,7 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == "Submit")
   {
     mysql_do_query("UPDATE `cms_pages` SET `page_key`='$key'
                      WHERE `page_id`='".mysql_real_escape_string($page_id)."'");
-    header("location: "$page['parent_path'].$key);
+    header("location: ".page['parent_path'].$key);
     die();
   }
 }
