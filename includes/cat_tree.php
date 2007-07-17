@@ -21,7 +21,7 @@ function build_cat_tree()
 	$tree['flat'] = Array();
 	$tree['ids'] = Array();
 	
-	$ids = mysql_do_query("SELECT * FROM `categories`");
+	$ids = mysql_do_query("SELECT * FROM `cms_categories`");
 	while ($cat = mysql_fetch_assoc($ids))
 	{
 		$cat['children'] = Array();
