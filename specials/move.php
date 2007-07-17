@@ -15,7 +15,7 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == "Submit" && isset($tree['ids'
   $keytest = mysql_do_query("SELECT * FROM `cms_pages` WHERE `page_key`='$key' AND `page_category`='$cat'");
   if (mysql_num_rows($keytest) > 0)
   {
-    $content .= "Sorry, that page is in use";
+    $content .= "Sorry, that page is in use</br></br>";
   }
   else
   {
