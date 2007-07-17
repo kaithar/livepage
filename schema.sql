@@ -28,13 +28,14 @@ INSERT INTO `cms_categories`
 
 CREATE TABLE `cms_config` (
   `db_revision` int(10) unsigned NOT NULL default '1',
-  `site_name` varchar(255) collate utf8_unicode_ci NOT NULL default 'LivePage',
-  `lock_message` varchar(255) collate utf8_unicode_ci default NULL
+  `site_name` varchar(255) NOT NULL default 'LivePage',
+  `logo` varchar(255) NOT NULL default 'images/logo.png'
+  `lock_message` varchar(255) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `cms_config`
-	(`db_revision` ,`site_name` ,`lock_message`)
-	VALUES ('1', 'LivePage', NULL);
+	(`db_revision`, `site_name`, `logo`, `lock_message`)
+	VALUES ('1', 'LivePage', 'images/logo.png', NULL);
 
 -- --------------------------------------------------------
 

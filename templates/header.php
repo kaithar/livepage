@@ -9,7 +9,7 @@
   <table id="layout" cellspacing="0" cellpadding="0" width="100%">
    <tr>
     <td rowspan="2" id="td_sidebar">
-     <a href="/"><img src="/images/logo.png" alt="The Cell" id="logo"/></a><br/>
+     <a href="/"><img src="<?php echo $site_config['logo']?>" alt="The Cell" id="logo"/></a><br/>
      <div class="linkbox">
        <div class="links">
         <?php 

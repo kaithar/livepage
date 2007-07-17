@@ -11,6 +11,15 @@ require_once("templates/section.php");
 $requested = $_SERVER['REQUEST_URI'];
 
 /*****************************************************************************************************
+ * Bypass the normal code f the request is for /files/
+ * Such requests are simple rewrites.
+ */
+if (preg_match("|^/files/|", $requested))
+{
+	require_once("file_rewriter.php");
+}
+
+/*****************************************************************************************************
  * This code is designed to match "/foo/" and "/foo/.handler".
  * It inserts index, converting the url to "/foo/index" and "/foo/index.handler" respectively.
  */
@@ -102,7 +111,6 @@ else
 $page['parent_path'] = $parent_path ? $parent_path : "/";
 $page['path'] = $parent_path.$page['page_key'];
 $page['params'] = array_slice($vfile,1);
-	
 
 /*****************************************************************************************************
  * Process specials

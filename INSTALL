@@ -43,8 +43,12 @@ Install instructions:
   Do not include database settings in config.php if you specify that you wish to use the vhosting code.
   If you tell it you want to use vhosts, certain settings will only be loaded from the localised configs.
   If you tell it you don't want to use vhosts, localised configs will be ignored.
+
+5/ Check permissions
+
+  It's important to make sure files/ is writable by the webserver, otherwise logo uploads will fail miserably.
   
-5/ Almost done...
+6/ Almost done...
 
   You should now have a working install.  Well done.
   
