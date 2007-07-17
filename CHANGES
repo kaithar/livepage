@@ -1,6 +1,9 @@
- trunk - Dev Branch (r48)
+ trunk - Dev Branch (r53)
 ==========================
  
+ - Tweaks to the database and specials/movie.php to close bug #1 (false dupes)
+ - Tweaked database schema (r53)
+ - Fixed typo in specials/move.php that caused it to not work (r50,51)
  - Update specials/move.php to work with new variables (r48)
  - Update specials/edittitle.php to work with the new variables (r47)
  - Update specials/edit.php to work with the new variables (r46)
