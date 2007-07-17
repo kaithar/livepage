@@ -7,7 +7,7 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == "Submit")
   $key = mysql_real_escape_string($_POST['location']);
 
   $keytest = mysql_do_query("SELECT * FROM `cms_pages` WHERE `page_key`='$key'");
-  if ((mysql_num_rows($keytest) > 0)&&($key != ""))
+  if (mysql_num_rows($keytest) > 0)
   {
     $content .= "Sorry, that page is in use";
   }

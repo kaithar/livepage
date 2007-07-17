@@ -13,7 +13,7 @@ CREATE TABLE `cms_categories` (
   `cat_key` varchar(255) collate utf8_unicode_ci NOT NULL,
   `cat_title` varchar(255) collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`cat_id`),
-  KEY `cat_parent` (`cat_parent`),
+  UNIQUE KEY `failsafe` (`cat_parent`,`cat_key`),
   KEY `cat_key` (`cat_key`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -64,6 +64,7 @@ CREATE TABLE `cms_pages` (
   `page_title` varchar(255) NOT NULL default '',
   `page_include` varchar(255) default NULL,
   PRIMARY KEY  (`page_id`),
+  UNIQUE KEY `failsafe` (`page_category`,`page_key`),
   KEY `page_key` (`page_key`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
