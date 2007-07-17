@@ -37,4 +37,8 @@ if(mysql_num_rows($result) == 1) {
   $user = Array("editcontent" => 0);
   $session = Array();
 }
+
+$sql = mysql_do_query("SELECT * FROM `cms_config`");
+$site_config = mysql_fetch_assoc($sql);
+
 ?>

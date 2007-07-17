@@ -122,6 +122,9 @@ if ($page['params'] && ($user['editcontent'] == 1))
 	$showpage = 0;
 	switch ($page['params'][0])
 	{
+		case "config":
+			include("specials/config.php");
+			break;
 		case "create":
 			include("specials/create.php");
 			break;

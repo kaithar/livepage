@@ -3,9 +3,7 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html;"/>
   <link rel="stylesheet" href="/style.css" type="text/css"/>
-  <title>The Cell - <?php echo $page['page_title'];?></title>
-  <!-- compliance patch for microsoft browsers -->
-  <!--[if lt IE 7]><script src="/IE7_0_9/ie7-standard-p.js" type="text/javascript"></script><![endif]-->
+  <title><?php echo $site_config['site_name']." - ".$page['page_title'];?></title>
  </head>
  <body>
   <table id="layout" cellspacing="0" cellpadding="0" width="100%">
@@ -32,6 +30,11 @@
          <div class="linkbox">
           <center><b>Admin</b></center>
           <div class="links">
+					 <a href="<?php echo $page['parent_path'].$page['page_key'];?>.config">Site Config</a>
+			    </div>
+					<br/>
+					<center><b>Page editing</b></center>
+					<div class="links">
 					 <?php if ($page['found'])
 				   { ?>
              <a href="<?php echo $page['parent_path'].$page['page_key'];?>.createsection">New Section</a>
