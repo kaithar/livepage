@@ -1,5 +1,7 @@
 <?php
 
+$admining = 1;
+
 if (isset($_POST['general']) && $_POST['general'] == "Submit")
 {
   $site_name = mysql_real_escape_string($_POST['site_name']);
@@ -53,8 +55,7 @@ $c = "<form enctype=\"multipart/form-data\" action=\"{$page['path']}.config\" me
 $c .= "<!-- MAX_FILE_SIZE must precede the file input field -->";
 $c .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"102400\">";
 $c .= "<!-- Name of input element determines name in $_FILES array -->";
-$c .= "Upload logo:<br/><br/>";
-$c .= "<input name=\"userfile\" type=\"file\" size=50/><br/>";
+$c .= "Upload logo: <input name=\"userfile\" type=\"file\" size=50/><br/><br/>";
 $c .= "<input type=\"submit\" name=\"logo\" value=\"Upload\"/>";
 $c .= "</form>";
 

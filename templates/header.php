@@ -30,19 +30,22 @@
          <div class="linkbox">
           <center><b>Admin</b></center>
           <div class="links">
-					 <a href="<?php echo $page['parent_path'].$page['page_key'];?>.config">Site Config</a>
+					  <a href="<?php echo $page['path'];?>.config">Site Config</a>
+						<a href="<?php echo $page['path'];?>.sidebar">Edit Sidebar</a>
 			    </div>
-					<br/>
-					<center><b>Page editing</b></center>
-					<div class="links">
-					 <?php if ($page['found'])
-				   { ?>
-             <a href="<?php echo $page['parent_path'].$page['page_key'];?>.createsection">New Section</a>
-             <a href="<?php echo $page['parent_path'].$page['page_key'];?>.edittitle">Edit Title</a>
-             <a href="<?php echo $page['parent_path'].$page['page_key'];?>.move">Move</a>
-             <a href="<?php echo $page['parent_path'].$page['page_key'];?>.delpage">Nuke Page</a>
-					 <?php } ?>
-          </div>
+					<?php if ($admining == 0) { ?>
+					  <br/>
+					  <center><b>Page editing</b></center>
+					  <div class="links">
+					    <?php if ($page['found'])
+				      { ?>
+                <a href="<?php echo $page['path'];?>.createsection">New Section</a>
+                <a href="<?php echo $page['path'];?>.edittitle">Edit Title</a>
+                <a href="<?php echo $page['path'];?>.move">Move</a>
+                <a href="<?php echo $page['path'];?>.delpage">Nuke Page</a>
+					    <?php } ?>
+            </div>
+					<?php } ?>
          </div>
          <?php
        }

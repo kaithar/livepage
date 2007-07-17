@@ -10,6 +10,9 @@ require_once("templates/section.php");
 // $_SERVER['REQUEST_URI'] is like "/foo/bar"
 $requested = $_SERVER['REQUEST_URI'];
 
+// For the purpose of this, see templates/header.php and specials/config.php
+$admining = 0;
+
 /*****************************************************************************************************
  * Bypass the normal code f the request is for /files/
  * Such requests are simple rewrites.
@@ -132,6 +135,9 @@ if ($page['params'] && ($user['editcontent'] == 1))
 	{
 		case "config":
 			include("specials/config.php");
+			break;
+		case "sidebar":
+			include("specials/sidebar.php");
 			break;
 		case "create":
 			include("specials/create.php");
