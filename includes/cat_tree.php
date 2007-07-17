@@ -4,12 +4,11 @@ require_once('includes/db.php');
 
 function recursive_tree_path(&$flat, &$node, $flat_path, $path)
 {
-	$flat_path .= $node['cat_title'];
+	$flat_path .= $node['cat_title'] . " &raquo; ";
 	$path .= $node['cat_key'];
 	$node['flat_path'] = $flat_path;
 	$node['path'] = $path;
 	$flat[] = &$node;
-	$flat_path .= " &raquo; ";
 	$path .= "/";
 	foreach ($node['children'] as $k => $v)
 		recursive_tree_path($flat, $node['children'][$k], $flat_path, $path);
