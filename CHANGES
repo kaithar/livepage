@@ -1,6 +1,10 @@
- trunk - Dev Branch (r65)
+ trunk - Dev Branch (r69)
 ==========================
  
+ - Added an admin interface for managing the sidebar (r69)
+ - Added the ability to upload logos (r68)
+ - Added site configuration. (r67)
+ - More QA (r66)
  - Taught move.php about moving between categories (r58,62,63,64,65)
  - Make cat_tree.php to build useful data structures from the database (r55,56,59,60,61)
  - Tweaks to the database and specials/move.php to close bug #1 (false dupes) (r53)
