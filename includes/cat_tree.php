@@ -30,10 +30,10 @@ function build_cat_tree()
 	
 	foreach ($tree['ids'] as $cat)
 	{
-		if ($cat['parent'] == 0)
+		if ($cat['cat_parent'] == 0)
 			$tree['tree'] = $cat;
 		else
-			$tree['ids'][$cat['parent']]['children'] = $cat;
+			$tree['ids'][$cat['cat_parent']]['children'] = $cat;
 	}
 	
 	recursive_tree_path($tree['flat'],$tree['tree'],"","");
