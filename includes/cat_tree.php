@@ -2,14 +2,17 @@
 
 require_once('includes/db.php');
 
-function recursive_tree_path($flat,$node,$path)
+function recursive_tree_path($flat, $node, $flat_path, $path)
 {
-	$path .= $node['cat_title'];
-	$node['flat_path'] = $path;
+	$flat_path .= $node['cat_title'];
+	$path .= $node['cat_key'];
+	$node['flat_path'] = $flat_path;
+	$node['path'] = $path;
 	$flat[] = $node;
-	$path .= " &raquo; ";
+	$flat_path .= " &raquo; ";
+	$path .= "/";
 	foreach ($node['children'] as $child)
-		recursive_tree_path($flat, $child, $path);
+		recursive_tree_path($flat, $child, $flat_path, $path);
 }
 
 function build_cat_tree()
@@ -33,7 +36,7 @@ function build_cat_tree()
 			$tree['ids'][$cat['parent']]['children'] = $cat;
 	}
 	
-	recursive_tree_path($tree['flat'],$tree['tree'],"");
+	recursive_tree_path($tree['flat'],$tree['tree'],"","");
 	return $tree;
 }
 
