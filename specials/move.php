@@ -27,14 +27,14 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == "Submit" && isset($tree['ids'
 }
 
 $c = "<form action=\"{$page['path']}.move\" method=\"POST\">";
-$c .= "<select name=\"category\">";
+$c .= "Move to:<br/><select name=\"category\">";
 foreach ($tree['flat'] as $tcat)
 {
 	$c .= "<option value=\"{$tcat['cat_id']}\"".(($tcat['cat_id'] == $page['page_category'])?" selected=\"selected\"":"").">";
 	$c .= $tcat['flat_path']."</option>";
 }
 $c .= "</select>";
-$c .= "Page title:<br><input type=\"text\" name=\"location\" size=\"95\" value=\"{$page['page_key']}\"><br>";
+$c .= "<input type=\"text\" name=\"location\" size=\"95\" value=\"{$page['page_key']}\"><br>";
 $c .= "<input type=\"Submit\" name=\"Submit\" value=\"Submit\"></form>";
 
 $content .= section("Move page...",$c);
