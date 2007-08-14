@@ -1,6 +1,7 @@
- trunk - Dev Branch (r69)
+ trunk - Dev Branch (r72)
 ==========================
  
+ - Added installer and upgrader scripts (r71,72)
  - Added an admin interface for managing the sidebar (r69)
  - Added the ability to upload logos (r68)
  - Added site configuration. (r67)
