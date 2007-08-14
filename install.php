@@ -72,7 +72,7 @@ mysql_query("CREATE TABLE `cms_categories`
   PRIMARY KEY  (`cat_id`),
   UNIQUE KEY `failsafe` (`cat_parent`,`cat_key`),
   KEY `cat_key` (`cat_key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 print "Ok!<br/>Creating Config... ";
 
@@ -82,7 +82,7 @@ mysql_query("CREATE TABLE `cms_config`
   `site_name` varchar(255) NOT NULL default 'LivePage',
   `logo` varchar(255) NOT NULL default 'images/logo.png',
   `lock_message` varchar(255) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 print "Ok!<br/>Creating Menu... ";
 
@@ -93,7 +93,7 @@ mysql_query("CREATE TABLE `cms_menu`
   `item_text` varchar(255) NOT NULL default '',
   `item_url` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 print "Ok!<br/>Creating Pages... ";
 
@@ -107,7 +107,7 @@ mysql_query("CREATE TABLE `cms_pages`
   PRIMARY KEY  (`page_id`),
   UNIQUE KEY `failsafe` (`page_category`,`page_key`),
   KEY `page_key` (`page_key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 print "Ok!<br/>Creating Sections... ";
 
@@ -119,7 +119,7 @@ mysql_query("CREATE TABLE `cms_sections`
   `section_title` varchar(255) NOT NULL,
   `section_text` longtext NOT NULL,
   PRIMARY KEY  (`section_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 print "Ok!<br/>Creating Sessions... ";
 
@@ -128,7 +128,7 @@ mysql_query("CREATE TABLE `cms_sessions`
   `user_id` int(11) NOT NULL default '0',
   `session_id` varchar(255) NOT NULL default '',
   `lastview` int(11) NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 print "Ok!<br/>Creating Users... ";
 
@@ -142,7 +142,7 @@ mysql_query("CREATE TABLE `cms_users`
   `lastfail` int(11) NOT NULL default '0',
   `editcontent` tinyint(4) NOT NULL,
   PRIMARY KEY  (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 print "Ok!<br/>";
 
