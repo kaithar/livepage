@@ -1,10 +1,13 @@
 <?php
 
-define("INSTALLER", true);
+if (!defined("MASSUPGRADE"))
+{
+  define("INSTALLER", true);
 
-print "<b>Attempting to load configs...</b><br/>";
+  print "<b>Attempting to load configs...</b><br/>";
 
-require_once("includes/env_init.php");
+  require_once("includes/env_init.php");
+}
 
 print "<b>Grabbing config data...</b><br/>";
 
@@ -20,6 +23,7 @@ switch($site_config["db_revision"])
     
     print "Database upto date.<br/>";
     break;
-  default: die ("Unknown db version!!!");
+  default:
+    die ("Unknown db version!!!");
 }
 ?>

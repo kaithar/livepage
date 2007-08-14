@@ -76,6 +76,12 @@ if (($config['db_name'] == "") or
 }
 
 /**
+ * Hyper upgrade password!
+ */
+if (!isset($config['massupgradepass']))
+  $failed = 1;
+
+/**
  * Any config errors?
  */
 if ($failed == 1)

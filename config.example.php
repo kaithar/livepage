@@ -11,6 +11,11 @@ $config['vhosts'] = 1;
 $config['disabled'] = 0;
 
 /**
+ * This bit is really important :P
+ */
+// $config['massupgradepass'] = "";
+
+/**
  * The following config variables should only be set -here- if you set vhosts to 0.
  * Otherwise you need to go and setup the config files in domains/
  */
