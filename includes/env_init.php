@@ -35,7 +35,8 @@ if ($config['vhosts'] == 1)
 	 * Notice the www is trimmed.  Bit of a problem should www.com want to host with us.
 	 */
 	$domain = $_SERVER['HTTP_HOST'];
-	preg_replace("/^www\./","",$domain);
+	$domain = preg_replace("/^www\./","",$domain);
+  $domain = preg_replace("/\.\.+/",".",$domain);
 	if (!(include ('domains/'.$domain.'.php')))
 		die("I'm sorry, unable to find a site by that name.");
 }
@@ -55,7 +56,12 @@ if ($config['debug'] == 1)
  * Is this site disabled? (Locally or globally)
  */
 if ($config['disabled'])
-	die($config['disabled']);
+{
+  if (defined("INSTALLER"))
+    print("<b>Warning:</b> Site is currently set as disabled! (\"{$config['disabled']}\")<br/>");
+  else
+	  die($config['disabled']);
+}
 else
 	$config['disabled'] = 0;
 
