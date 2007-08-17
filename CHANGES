@@ -1,6 +1,7 @@
- trunk - Dev Branch (r75)
+ trunk - Dev Branch (r77)
 ==========================
- 
+
+ - Fixed a bug where the default logo was relative instead of absolute. (r77, bug #122) 
  - Added a mass upgrader (r75)
  - Changed to InnoDB tables (r74)
  - Added installer and upgrader scripts (r71,72)

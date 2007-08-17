@@ -173,7 +173,7 @@ print "Inserting site config...";
 mysql_query("
 INSERT INTO `cms_config`
            (`db_revision`, `site_name`, `logo`, `lock_message`)
-    VALUES ('1', 'LivePage', 'images/logo.png', NULL)") or die("Failed!");
+    VALUES ('2', 'LivePage', '/images/logo.png', NULL)") or die("Failed!");
 
 print "Ok!<br/>";
 
