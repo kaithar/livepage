@@ -21,7 +21,7 @@ print "<ul>";
 switch($site_config["db_revision"])
 {
   case 1:
-    print "<li>01 -> 02) Fixing broken default logo's</li>";
+    print "<li>01 -> 02 --- Fixing broken default logo's</li>";
     mysql_query("UPDATE `cms_config` SET logo='/images/logo.png' WHERE logo='images/logo.png'");
     mysql_query("UPDATE `cms_config` SET db_revision='2'");
   case 2:
