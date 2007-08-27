@@ -16,7 +16,10 @@
           $mylinks = mysql_do_query("SELECT * FROM `cms_menu` ORDER BY `item_order` ASC");
           while ($item = mysql_fetch_assoc($mylinks))
           {
-            echo "<a href=\"{$item['item_url']}\">{$item['item_text']}</a>\n"; 
+            if ($item['item_separator'] == 0)
+              echo "<a href=\"{$item['item_url']}\">{$item['item_text']}</a>\n"; 
+            else
+              echo "</div><br/><div class=\"links\">\n";
           }
         ?>
       </div>

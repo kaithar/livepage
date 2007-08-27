@@ -42,8 +42,19 @@ if (isset($page['params'][1]))
       mysql_do_query("INSERT INTO `cms_menu`
                               SET `item_text` = '".mysql_real_escape_string($_POST['mtext'])."',
                                   `item_url` = '".mysql_real_escape_string($_POST['murl'])."',
-                                  `item_order` = '".mysql_real_escape_string($length+1)."'");
+                                  `item_order` = '".mysql_real_escape_string($length+1)."',
+                                  `item_sepatator` = '0'");
     }
+    header("location: ".$page['path'].".sidebar");
+    die();
+  }
+  else if (($page['params'][1] == "separator") && (isset($page['params'][2])) && ($page['params'][2] == "add"))
+  {
+    mysql_do_query("INSERT INTO `cms_menu`
+                            SET `item_text` = 'Separator',
+                                `item_url` = 'Separator',
+                                `item_order` = '".mysql_real_escape_string($length+1)."',
+                                `item_separator` = '1'");
     header("location: ".$page['path'].".sidebar");
     die();
   }
@@ -102,7 +113,14 @@ else
   
   while ($item = mysql_fetch_assoc($menu))
   {
-    $c .= "<tr><td>{$item['item_text']}</td><td>{$item['item_url']}</td><td>";
+    if ($item['item_separator'] == 0)
+    {
+      $c .= "<tr><td>{$item['item_text']}</td><td>{$item['item_url']}</td><td>";
+    }
+    else
+    {
+      $c .= "<tr><td colspan=\"2\">Separator</td><td>";
+    }
     
     if ($item['item_order'] > 0) 
       $c .= "<a href=\"{$page['path']}.sidebar.swap.".($item['item_order']-1).".{$item['item_order']}\">Move up</a> / ";
@@ -118,7 +136,9 @@ else
     $c .= "<a href=\"{$page['path']}.sidebar.delete.{$item['item_id']}\">Delete</a>";
   }
   
-  $c .= "</table><br/><br/>New Entry";
+  $c .= "</table>";
+  $c .= "<br/><a href=\"{$page['path']}.sidebar.separator.add\">Add new separator</a>";
+  $c .= "<br/><br/><b>New Entry</b>";
   $c .= "<form action=\"{$page['path']}.sidebar.add\" method=\"POST\">";
   $c .= '<table border="0" cellpadding="5" cellspacing="0">';
   $c .= "<tr><td>Menu text:</td>";
@@ -126,6 +146,7 @@ else
   $c .= "<tr><td>Menu link:</td>";
   $c .= "<td><input type=\"text\" name=\"murl\" size=\"50\"/></td></tr>";
   $c .= "<tr><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Add\"/></td></tr></table></form>";
+  
   
   $content .= section("Sidebar config",$c);
 }
