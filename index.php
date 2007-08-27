@@ -240,9 +240,9 @@ if ($showpage)
  * We should have some content, render it then close the database.
  */
 
-include_header();
+require_once(select_header());
 echo $content;
-include_footer();
+require_once(select_footer());
 dbclose();
 
 ?>

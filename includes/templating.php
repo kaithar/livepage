@@ -1,26 +1,26 @@
 <?php
 
-function include_header ()
+function select_header ()
 {
   if (file_exists('files/'.$domain.'/templates/header.php'))
   {
-    require_once('files/'.$domain.'/templates/header.php');
+    return 'files/'.$domain.'/templates/header.php';
   }
   else
   {
-    require_once("templates/header.php");
+    return "templates/header.php";
   }
 }
 
-function include_footer ()
+function select_footer ()
 {
   if (file_exists('files/'.$domain.'/templates/footer.php'))
   {
-    require_once('files/'.$domain.'/templates/footer.php');
+    return 'files/'.$domain.'/templates/footer.php';
   }
   else
   {
-    require_once("templates/footer.php");
+    return "templates/footer.php";
   }
 }
 
