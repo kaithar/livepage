@@ -1,6 +1,7 @@
- trunk - Dev Branch (r87)
+ trunk - Dev Branch (r88)
 ==========================
 
+ - Move the stylesheet in to the templates folder and install a special on "css" in prep for more styling. (r88, bug #4)
  - First part of more complex templating: For now, allow domains to have custom headers/footers/sections. (r85, r87, bug #4)
  - When in vhost mode, use don't use local setting from the global config and global settings from the local. (r83, bug #96)
  - Update the INSTALL file a bit (r82, bug #10)
