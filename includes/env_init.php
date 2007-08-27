@@ -22,7 +22,7 @@ $config['debug'] = 0;
  * Load global config
  */
 
-if (!(include('config.php')))
+if (!(include_once('config.php')))
 	die("Please configure the software");
 
 /**
@@ -40,7 +40,7 @@ if ($config['vhosts'] == 1)
 	$domain = $_SERVER['HTTP_HOST'];
 	$domain = preg_replace("/^www\./","",$domain);
   $domain = preg_replace("/\.\.+/",".",$domain);
-	if (!(include ('domains/'.$domain.'.php')))
+	if (!(include_once ('domains/'.$domain.'.php')))
 		die("I'm sorry, unable to find a site by that name.");
   
   
