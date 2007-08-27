@@ -90,9 +90,10 @@ mysql_query("CREATE TABLE `cms_menu`
 (
   `item_id` int(10) unsigned NOT NULL auto_increment,
   `item_order` int(11) NOT NULL default '0',
+  `item_category` int(10) unsigned NOT NULL default '0',
   `item_text` varchar(255) NOT NULL default '',
   `item_url` varchar(255) NOT NULL default '',
-  `item_separator` tinyint(1) unsigned NOT NULL default '0'
+  `item_separator` tinyint(1) unsigned NOT NULL default '1'
   PRIMARY KEY  (`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 

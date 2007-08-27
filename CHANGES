@@ -1,6 +1,8 @@
- trunk - Dev Branch (r80)
+ trunk - Dev Branch (r81)
 ==========================
 
+ - Add the ability to place menu items in categories (r81, bug #5)
+ - Correct minor error in separator code (r81)
  - Added the appropriate code to deal with the separator flag (r80, bug #126)
  - Added separator flag to sidebar table (r79, bug #126)
  - Fixed a bug where the default logo was relative instead of absolute. (r77, bug #122) 

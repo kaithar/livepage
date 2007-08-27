@@ -43,4 +43,13 @@ function build_cat_tree()
 	return $tree;
 }
 
+function return_cat_tree_select($node, $selected = "")
+{
+  $r = "<option value=\"{$node['cat_id']}\"";
+  $r .= ($selected == $node['cat_id'] ? " SELECTED" : "").">{$node['flat_path']}</option>\n";
+  foreach ($node['children'] as $k => $v)
+    $r .= return_cat_tree_select($v, $selected);
+  return $r;
+}
+
 ?>

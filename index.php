@@ -44,6 +44,8 @@ $path = Array();
 $parent = 0;
 $parent_path = "";
 
+$visible_categories = Array();
+
 while (count($vpath) > 1)
 {
   $vfile = explode(".", array_shift(&$vpath)); // Explode the next path component
@@ -70,6 +72,7 @@ while (count($vpath) > 1)
   	// We have a cat, so it needs to be properly treated... with cat nip :P
   	$cat = mysql_fetch_assoc($mycat);
 		$cat['found'] = true;
+    $visible_categories[$cat['cat_id']] = true;
 	}
 
 	$cat['parent_path'] = $parent_path ? $parent_path : "/";

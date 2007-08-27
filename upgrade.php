@@ -29,6 +29,10 @@ switch($site_config["db_revision"])
     mysql_query("ALTER TABLE `cms_menu` ADD `item_separator` tinyint(1) unsigned NOT NULL default '0' AFTER `item_url`");
     mysql_query("UPDATE `cms_config` SET db_revision='3'");
   case 3:
+    print "<li>03 -> 04 --- Add category field to sidebar</li>";
+    mysql_query("ALTER TABLE `cms_menu` ADD `item_category` int(10) unsigned NOT NULL default '1' AFTER `item_order`");
+    mysql_query("UPDATE `cms_config` SET db_revision='4'");
+  case 4:
     print "<li>Database upto date.</li>";
     break;
   default:

@@ -1,6 +1,10 @@
 <?php
 
+require_once("includes/cat_tree.php");
+
 $admining = 1;
+
+$tree = build_cat_tree();
 
 $menu = mysql_do_query("SELECT * FROM `cms_menu` ORDER BY `item_order` ASC");
 $length = mysql_num_rows($menu) - 1;
@@ -42,8 +46,9 @@ if (isset($page['params'][1]))
       mysql_do_query("INSERT INTO `cms_menu`
                               SET `item_text` = '".mysql_real_escape_string($_POST['mtext'])."',
                                   `item_url` = '".mysql_real_escape_string($_POST['murl'])."',
+                                  `item_category` = '".mysql_real_escape_string($_POST['mcategory'])."',
                                   `item_order` = '".mysql_real_escape_string($length+1)."',
-                                  `item_sepatator` = '0'");
+                                  `item_separator` = '0'");
     }
     header("location: ".$page['path'].".sidebar");
     die();
@@ -64,7 +69,8 @@ if (isset($page['params'][1]))
     {
       mysql_do_query("UPDATE `cms_menu` 
                          SET `item_text` = '".mysql_real_escape_string($_POST['mtext'])."',
-                             `item_url` = '".mysql_real_escape_string($_POST['murl'])."'
+                             `item_url` = '".mysql_real_escape_string($_POST['murl'])."',
+                             `item_category` = '".mysql_real_escape_string($_POST['mcategory'])."'
                        WHERE `item_id` = '".mysql_real_escape_string($page['params'][2])."'");
       header("location: ".$page['path'].".sidebar");
       die();
@@ -76,10 +82,17 @@ if (isset($page['params'][1]))
     
     $c = "<form action=\"{$page['path']}.sidebar.edit.{$page['params'][2]}\" method=\"POST\">";
     $c .= '<table border="0" cellpadding="5" cellspacing="0">';
+    
+    $c .= "<tr><td>Category:</td>";
+    $c .= "<td><select name=\"mcategory\" size=\"1\"/>";
+    $c .= return_cat_tree_select($tree['tree'], $menuitem['item_category'])."</select></td></tr>";
+    
     $c .= "<tr><td>Menu text:</td>";
     $c .= "<td><input type=\"text\" name=\"mtext\" value=\"{$menuitem['item_text']}\" size=\"50\"/></td></tr>";
+    
     $c .= "<tr><td>Menu link:</td>";
     $c .= "<td><input type=\"text\" name=\"murl\" value=\"{$menuitem['item_url']}\" size=\"50\"/></td></tr>";
+    
     $c .= "<tr><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Submit\"/></td></tr></table></form>";
     $content .= section("Edit menu item",$c);
   }
@@ -109,17 +122,18 @@ if (isset($page['params'][1]))
 else
 {
   $c = "<table border=\"1\" cellpadding=\"5\">";
-  $c .= "<tr><th>Menu Text</th><th>Target url</th><th>Actions</th></tr>";
+  $c .= "<tr><th>Category</th><th>Menu Text</th><th>Target url</th><th>Actions</th></tr>";
   
   while ($item = mysql_fetch_assoc($menu))
   {
+    $c .= "<tr><td>{$tree['ids'][$item['item_category']]['flat_path']}</td>";
     if ($item['item_separator'] == 0)
     {
-      $c .= "<tr><td>{$item['item_text']}</td><td>{$item['item_url']}</td><td>";
+      $c .= "<td>{$item['item_text']}</td><td>{$item['item_url']}</td><td>";
     }
     else
     {
-      $c .= "<tr><td colspan=\"2\">Separator</td><td>";
+      $c .= "<td colspan=\"2\">Separator</td><td>";
     }
     
     if ($item['item_order'] > 0) 
@@ -141,10 +155,16 @@ else
   $c .= "<br/><br/><b>New Entry</b>";
   $c .= "<form action=\"{$page['path']}.sidebar.add\" method=\"POST\">";
   $c .= '<table border="0" cellpadding="5" cellspacing="0">';
+  
+  $c .= "<tr><td>Category:</td>";
+  $c .= "<td><select name=\"mcategory\" size=\"1\"/>".return_cat_tree_select($tree['tree'])."</select></td></tr>";
+  
   $c .= "<tr><td>Menu text:</td>";
   $c .= "<td><input type=\"text\" name=\"mtext\" size=\"50\"/></td></tr>";
+  
   $c .= "<tr><td>Menu link:</td>";
   $c .= "<td><input type=\"text\" name=\"murl\" size=\"50\"/></td></tr>";
+  
   $c .= "<tr><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Add\"/></td></tr></table></form>";
   
   
