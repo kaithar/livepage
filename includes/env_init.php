@@ -31,6 +31,9 @@ if (!(include('config.php')))
 
 if ($config['vhosts'] == 1)
 {
+  $configbk = $config;
+  $config = Array();
+  
 	/**
 	 * Notice the www is trimmed.  Bit of a problem should www.com want to host with us.
 	 */
@@ -39,6 +42,16 @@ if ($config['vhosts'] == 1)
   $domain = preg_replace("/\.\.+/",".",$domain);
 	if (!(include ('domains/'.$domain.'.php')))
 		die("I'm sorry, unable to find a site by that name.");
+  
+  
+  // Override the local conf with some global values.
+  $config['vhosts'] = 1;
+  $config['massupgradepass'] = $configbk['massupgradepass'];
+  
+  if ($configbk['disabled'])
+    $config['disabled'] = $configbk['disabled'];
+  
+  unset ($configbk);
 }
 
 /**
