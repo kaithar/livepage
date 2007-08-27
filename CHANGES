@@ -1,6 +1,7 @@
- trunk - Dev Branch (r81)
+ trunk - Dev Branch (r82)
 ==========================
 
+ - Update the INSTALL file a bit (r82, bug #10)
  - Add the ability to place menu items in categories (r81, bug #5)
  - Correct minor error in separator code (r81)
  - Added the appropriate code to deal with the separator flag (r80, bug #126)

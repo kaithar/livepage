@@ -17,8 +17,7 @@ Install instructions:
    
 2/ Creating databases.
    
-  Create mysql database and user for each site necessary and load schema.sql.
-  At some point in the future, this step will be automated.
+  Create mysql database and user for each site necessary.
   
   LivePage requires a mysql database for each distinct site it is going to run.
   At a later date you may use site prefixes to run multiple sites off the same database, but we generally don't recomend it.
@@ -31,6 +30,9 @@ Install instructions:
 
   Without a config.php, bad things happen.
   Not following instructions will probably lead you to stress.
+  
+  At this point, you should probably have a "We are installing, just a moment" type message in the global disable option.
+  You should also make sure you complete the config properly. ;)
   
 4/ Localised configuration.
 
@@ -48,11 +50,20 @@ Install instructions:
 
   It's important to make sure files/ is writable by the webserver, otherwise logo uploads will fail miserably.
   
-6/ Almost done...
+6/ Run installer
+
+  Visit /install.php on each domain you have installed.
+  
+  This will create the necessary folders under files/ and create the database tables.
+  
+7/ Almost done...
 
   You should now have a working install.  Well done.
+  
+  Don't forget to clear the disable option.
   
   Next please go and change the admin pass (defaults to admin).
   You may also wish to customise your site, as the default settings are rather boring.
   
- 
+  To install further sites, repeat steps 2, 4 and 6.
+  For extra installed, you should probably use the disable option in the localised config, instead of the global config.
