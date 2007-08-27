@@ -1,5 +1,7 @@
 <?php
 
+header("Content-Type: text/css");
+
 if (file_exists('files/'.$domain.'/templates/style.php'))
 {
   require_once('files/'.$domain.'/templates/style.php');
