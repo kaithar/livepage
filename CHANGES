@@ -1,6 +1,7 @@
- trunk - Dev Branch (r77)
+ trunk - Dev Branch (r79)
 ==========================
 
+ - Added separator flag to sidebar table (r79, bug #126)
  - Fixed a bug where the default logo was relative instead of absolute. (r77, bug #122) 
  - Added a mass upgrader (r75)
  - Changed to InnoDB tables (r74)

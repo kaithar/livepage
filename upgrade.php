@@ -25,6 +25,10 @@ switch($site_config["db_revision"])
     mysql_query("UPDATE `cms_config` SET logo='/images/logo.png' WHERE logo='images/logo.png'");
     mysql_query("UPDATE `cms_config` SET db_revision='2'");
   case 2:
+    print "<li>02 -> 03 --- Adding separater flag to sidebar</li>";
+    mysql_query("ALTER TABLE `cms_menu` ADD `item_separator` tinyint(1) unsigned NOT NULL default '0' AFTER `item_url`");
+    mysql_query("UPDATE `cms_config` SET db_revision='3'");
+  case 3:
     print "<li>Database upto date.</li>";
     break;
   default:

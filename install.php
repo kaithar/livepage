@@ -92,6 +92,7 @@ mysql_query("CREATE TABLE `cms_menu`
   `item_order` int(11) NOT NULL default '0',
   `item_text` varchar(255) NOT NULL default '',
   `item_url` varchar(255) NOT NULL default '',
+  `item_separator` tinyint(1) unsigned NOT NULL default '0'
   PRIMARY KEY  (`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
@@ -173,7 +174,7 @@ print "Inserting site config...";
 mysql_query("
 INSERT INTO `cms_config`
            (`db_revision`, `site_name`, `logo`, `lock_message`)
-    VALUES ('2', 'LivePage', '/images/logo.png', NULL)") or die("Failed!");
+    VALUES ('3', 'LivePage', '/images/logo.png', NULL)") or die("Failed!");
 
 print "Ok!<br/>";
 
