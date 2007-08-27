@@ -5,7 +5,8 @@
  */
 
 require_once ("includes/env_init.php");
-require_once("templates/section.php");
+require_once ("includes/templating.php");
+
 
 // $_SERVER['REQUEST_URI'] is like "/foo/bar"
 $requested = $_SERVER['REQUEST_URI'];
@@ -239,9 +240,9 @@ if ($showpage)
  * We should have some content, render it then close the database.
  */
 
-include("templates/header.php");
+include_header();
 echo $content;
-include("templates/footer.php");
+include_footer();
 dbclose();
 
 ?>
