@@ -13,4 +13,6 @@ else
   require_once("templates/style.php");
 }
 
+die();
+
 ?>
