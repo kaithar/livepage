@@ -7,7 +7,7 @@
    </tr>
    <tr>
     <td class="PoweredBy">
-     Powered By <a href="livepage.org.uk"><img src="/images/btn.png" alt="LivePage"/></a>
+     Powered By <a href="http://livepage.org.uk"><img src="/images/btn.png" alt="LivePage"/></a>
     </td>
    </tr>
   </table>
