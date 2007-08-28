@@ -33,6 +33,10 @@ switch($site_config["db_revision"])
     mysql_query("ALTER TABLE `cms_menu` ADD `item_category` int(10) unsigned NOT NULL default '1' AFTER `item_order`");
     mysql_query("UPDATE `cms_config` SET db_revision='4'");
   case 4:
+    print "<li>04 -> 05 --- Add footer line</li>";
+    mysql_query("ALTER TABLE `cms_config` ADD `footer` varchar(255) NOT NULL default '' AFTER `logo`");
+    mysql_query("UPDATE `cms_config` SET db_revision='5'");
+  case 5:
     print "<li>Database upto date.</li>";
     break;
   default:

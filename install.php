@@ -81,6 +81,7 @@ mysql_query("CREATE TABLE `cms_config`
   `db_revision` int(10) unsigned NOT NULL default '1',
   `site_name` varchar(255) NOT NULL default 'LivePage',
   `logo` varchar(255) NOT NULL default 'images/logo.png',
+  `footer` varchar(255) NOT NULL default '',
   `lock_message` varchar(255) default NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
@@ -175,7 +176,7 @@ print "Inserting site config...";
 mysql_query("
 INSERT INTO `cms_config`
            (`db_revision`, `site_name`, `logo`, `lock_message`)
-    VALUES ('4', 'LivePage', '/images/logo.png', NULL)") or die("Failed!");
+    VALUES ('5', 'LivePage', '/images/logo.png', NULL)") or die("Failed!");
 
 print "Ok!<br/>";
 

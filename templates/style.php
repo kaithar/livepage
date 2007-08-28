@@ -37,6 +37,19 @@ td.footer
   border-bottom: 1px black solid;
 }
 
+.PoweredBy
+{
+  text-align: right;
+  padding: 0px 10px 0px 0px;
+  vertical-align: top;
+}
+
+.PoweredBy img
+{
+  position: relative;
+  top: 4px;
+}
+
 /*------------------*/
 
 a img {

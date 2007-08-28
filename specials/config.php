@@ -5,9 +5,11 @@ $admining = 1;
 if (isset($_POST['general']) && $_POST['general'] == "Submit")
 {
   $site_name = mysql_real_escape_string($_POST['site_name']);
+  $footer = mysql_real_escape_string($_POST['footer']);
 	
   mysql_do_query("UPDATE `cms_config` 
-                     SET `site_name`='$site_name'");
+                     SET `site_name`='$site_name',
+                         `footer` = '$footer'");
   header("location: ".$page['path'].".config");
   die();
 }
@@ -47,6 +49,7 @@ if (isset($_POST['logo']) && $_POST['logo'] == "Upload")
 
 $c = "<form action=\"{$page['path']}.config\" method=\"POST\">";
 $c .= "Site name: <input type=\"text\" name=\"site_name\" size=\"95\" value=\"{$site_config['site_name']}\"><br/><br/>";
+$c .= "Site footer: <input type=\"text\" name=\"footer\" size=\"95\" value=\"{$site_config['footer']}\"><br/><br/>";
 $c .= "<input type=\"Submit\" name=\"general\" value=\"Submit\"></form>";
 
 $content .= section("General Config",$c);

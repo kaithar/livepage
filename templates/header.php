@@ -8,7 +8,7 @@
  <body>
   <table id="layout" cellspacing="0" cellpadding="0" width="100%">
    <tr>
-    <td rowspan="2" id="td_sidebar">
+    <td rowspan="3" id="td_sidebar">
      <a href="/"><img src="<?php echo $site_config['logo']?>" alt="The Cell" id="logo"/></a><br/>
      <div class="linkbox">
        <div class="links">
