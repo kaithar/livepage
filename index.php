@@ -130,50 +130,59 @@ $content = "";
  */
 $showpage = 1;
 
-// If you can't edit the page, you can't use the handlers.
-if ($page['params'] && ($user['editcontent'] == 1))
+if ($page['params'])
 {
-	// Unless the special otherwise instructs it, the page won't display
-	$showpage = 0;
-	switch ($page['params'][0])
-	{
+  // If you can't edit the page, you can't use most of the handlers.
+  if ($user['editcontent'] == 1)
+  {
+    // Unless the special otherwise instructs it, the page won't display
+    $showpage = 0;
+    switch ($page['params'][0])
+    {
+      case "config":
+        include("specials/config.php");
+        break;
+      case "sidebar":
+        include("specials/sidebar.php");
+        break;
+      case "create":
+        include("specials/create.php");
+        break;
+      case "createsection":
+        include("specials/createsection.php");
+        break;
+      case "swap":
+        include("specials/swap.php");
+        break;
+      case "edit":
+        include("specials/edit.php");
+        break;
+      case "del":
+        include("specials/del.php");
+        break;
+      case "delpage":
+        include("specials/delpage.php");
+        break;
+      case "edittitle":
+        include("specials/edittitle.php");
+        break;
+      case "move":
+        include("specials/move.php");
+        break;
+      default:
+        // Okie, so it isn't an admin header... but we're not giving up yet...
+        $showpage = 1;
+    }
+  }
+  /* One last possibility before we assume it's .html or something...
+   * Note: These don't want the templating used.
+   */
+  switch ($page['params'][0])
+  {
     case "css":
       include("specials/style.php");
-      break;
-		case "config":
-			include("specials/config.php");
-			break;
-		case "sidebar":
-			include("specials/sidebar.php");
-			break;
-		case "create":
-			include("specials/create.php");
-			break;
-		case "createsection":
-			include("specials/createsection.php");
-			break;
-		case "swap":
-			include("specials/swap.php");
-			break;
-		case "edit":
-			include("specials/edit.php");
-			break;
-		case "del":
-			include("specials/del.php");
-			break;
-		case "delpage":
-			include("specials/delpage.php");
-			break;
-		case "edittitle":
-			include("specials/edittitle.php");
-			break;
-		case "move":
-			include("specials/move.php");
-			break;
-		default:
-			// This is probably caused by someone requesting a page with an extension (eg, index.htm)
-			$showpage = 1;
-	}
+      die();
+  }
 }
 
 /*****************************************************************************************************

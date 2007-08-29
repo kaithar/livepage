@@ -1,9 +1,9 @@
- trunk - Dev Branch (r93)
+ trunk - Dev Branch (r95)
 ==========================
 
- - Change the footer text around a bit, including a dynamic bit. (r93, bug #4)
+ - Change the footer text around a bit, including a dynamic bit. (r93, r94 bug #4)
  - Remove schema.sql, since it's out of date and redundant. (r92)
- - Move the stylesheet in to the templates folder and install a special on "css" in prep for more styling. (r88, r89, r90, bug #4)
+ - Move the stylesheet in to the templates folder and install a special on "css" in prep for more styling. (r88, r89, r90, r95 bug #4)
  - First part of more complex templating: For now, allow domains to have custom headers/footers/sections. (r85, r87, bug #4)
  - When in vhost mode, use don't use local setting from the global config and global settings from the local. (r83, bug #96)
  - Update the INSTALL file a bit (r82, bug #10)
