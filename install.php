@@ -85,13 +85,13 @@ mysql_query("CREATE TABLE `cms_config`
   `lock_message` varchar(255) default NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
-print "Ok!<br/>Creating Theme... ";
+print "Ok!<br/>Creating Template... ";
 
 mysql_query("CREATE TABLE `cms_template_config`
 (
   `template_name` varchar(255) NOT NULL default '',
   `template_data` text NOT NULL default '',
-  PRIMARY KEY (`template_name`),
+  PRIMARY KEY (`template_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 print "Ok!<br/>Creating Menu... ";
