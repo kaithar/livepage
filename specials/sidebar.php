@@ -58,6 +58,7 @@ if (isset($page['params'][1]))
     mysql_do_query("INSERT INTO `cms_menu`
                             SET `item_text` = 'Separator',
                                 `item_url` = 'Separator',
+                                `item_category` = '".mysql_real_escape_string($_POST['mcategory'])."',
                                 `item_order` = '".mysql_real_escape_string($length+1)."',
                                 `item_separator` = '1'");
     header("location: ".$page['path'].".sidebar");
@@ -151,7 +152,23 @@ else
   }
   
   $c .= "</table>";
-  $c .= "<br/><a href=\"{$page['path']}.sidebar.separator.add\">Add new separator</a>";
+  
+  /*----------------
+   * New separator
+   */
+  $c .= "<br/><br/><b>New Separator</b>";
+  $c .= "<form action=\"{$page['path']}.sidebar.separator.add\" method=\"POST\">";
+  $c .= '<table border="0" cellpadding="5" cellspacing="0">';
+  
+  $c .= "<tr><td>Category:</td>";
+  $c .= "<td><select name=\"mcategory\" size=\"1\"/>".return_cat_tree_select($tree['tree'])."</select></td></tr>";
+  
+  $c .= "<tr><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Add\"/></td></tr></table></form>";
+  
+  /*---------------
+   * New sidebar entry
+   */
+    
   $c .= "<br/><br/><b>New Entry</b>";
   $c .= "<form action=\"{$page['path']}.sidebar.add\" method=\"POST\">";
   $c .= '<table border="0" cellpadding="5" cellspacing="0">';
