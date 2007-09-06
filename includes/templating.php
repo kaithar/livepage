@@ -2,6 +2,7 @@
 
 function select_header ()
 {
+  global $domain;
   if (file_exists('files/'.$domain.'/templates/header.php'))
   {
     return 'files/'.$domain.'/templates/header.php';
@@ -14,6 +15,7 @@ function select_header ()
 
 function select_footer ()
 {
+  global $domain;
   if (file_exists('files/'.$domain.'/templates/footer.php'))
   {
     return 'files/'.$domain.'/templates/footer.php';
