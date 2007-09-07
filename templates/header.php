@@ -28,7 +28,7 @@
               }
               else if ($item['item_header'] == 1)
               {
-                echo "</div>\n<br/>\n<br/>\n<center><b>{$item['item_text']}</b></center>\n<div class=\"links\">\n";
+                echo "</div>\n<br/>\n<center><b>{$item['item_text']}</b></center>\n<div class=\"links\">\n";
               }
               else
               {
