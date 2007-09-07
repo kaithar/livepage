@@ -8,21 +8,28 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == "Submit" && isset($tree['ids'
 {
   $page_id = mysql_real_escape_string($page['page_id']);
 
-  $key = mysql_real_escape_string($_POST['location']);
+  $key = mysql_real_escape_string(preg_replace("/\s+/","_",$_POST['location']));
 	
 	$cat = mysql_real_escape_string($_POST['category']);
-
-  $keytest = mysql_do_query("SELECT * FROM `cms_pages` WHERE `page_key`='$key' AND `page_category`='$cat'");
-  if (mysql_num_rows($keytest) > 0)
+  
+  if (strpos($key,"/") !== FALSE)
   {
-    $content .= "Sorry, that page is in use</br></br>";
+    $content .= "Please do not use the character '/' in the name!";
   }
   else
   {
-    mysql_do_query("UPDATE `cms_pages` SET `page_key`='$key', `page_category`='$cat'
-                     WHERE `page_id`='".mysql_real_escape_string($page_id)."'");
-    header("location: ".$tree['ids'][$cat]['path']."/".$key);
-    die();
+    $keytest = mysql_do_query("SELECT * FROM `cms_pages` WHERE `page_key`='$key' AND `page_category`='$cat'");
+    if (mysql_num_rows($keytest) > 0)
+    {
+      $content .= "Sorry, that page is in use</br></br>";
+    }
+    else
+    {
+      mysql_do_query("UPDATE `cms_pages` SET `page_key`='$key', `page_category`='$cat'
+                       WHERE `page_id`='".mysql_real_escape_string($page_id)."'");
+      header("location: ".$tree['ids'][$cat]['path']."/".$key);
+      die();
+    }
   }
 }
 

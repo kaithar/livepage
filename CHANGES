@@ -1,6 +1,7 @@
- trunk - Dev Branch (r101)
+ trunk - Dev Branch (r102)
 ==========================
 
+ - Deny move to keys containing /, convert whitespace to _ (r102, bug #136, bug #97)
  - Make the sidebar item adding form slightly nicer to look at and rework some of the specials/sidebar code to be nicer. (r101)
  - Add support for sidebar menu headers. (r101)
  - Allow sidebar separators to have an initial category. (r98, bug #130, bug #134)
