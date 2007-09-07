@@ -4,8 +4,12 @@
   <meta http-equiv="Content-Type" content="text/html;"/>
   <link rel="stylesheet" href="/style.css" type="text/css"/>
   <title><?php echo $site_config['site_name']." - ".$page['page_title'];?></title>
+  <?php if (file_exists('files/'.$domain.'/templates/html_head.php'))
+      require_once('files/'.$domain.'/templates/html_head.php'); ?>
  </head>
  <body>
+  <?php if (file_exists('files/'.$domain.'/templates/banner.php'))
+     require_once('files/'.$domain.'/templates/banner.php'); ?>
   <table id="layout" cellspacing="0" cellpadding="0" width="100%">
    <tr>
     <td rowspan="3" id="td_sidebar">

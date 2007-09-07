@@ -1,8 +1,9 @@
- trunk - Dev Branch (r107)
+ trunk - Dev Branch (r112)
 ==========================
 
+ - Adding extra includes for site specific html headers and a banner. (r112, bug #4)
  - Placed some sanity checks on the contents of keys (r105, r107, bug #97, bug #136)
- - Deny move to keys containing /, convert whitespace to _ (r102, bug #136, bug #97)
+ - Deny move to keys containing /, convert whitespace to _ (r102, r108, bug #136, bug #97)
  - Make the sidebar item adding form slightly nicer to look at and rework some of the specials/sidebar code to be nicer. (r101)
  - Add support for sidebar menu headers. (r101)
  - Allow sidebar separators to have an initial category. (r98, bug #130, bug #134)
