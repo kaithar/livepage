@@ -17,8 +17,9 @@ table
 td#td_sidebar
 {
   padding: 0 5px 50px 5px;
-  width: 170px;
+  width: 200px;
   vertical-align: top;
+  text-align: center;
 }
 
 td#td_content
