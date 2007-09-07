@@ -17,7 +17,7 @@ $site_config = mysql_fetch_assoc($sql);
 print "<b>Attempting to upgrade...</b><br/>";
 print "<i>Database at version: ".$site_config["db_revision"]."</i><br/><br/>";
 
-if (!function_exists("mysql_f_query")
+if (!function_exists("mysql_f_query"))
 {
   function mysql_f_query ($query)
   {
