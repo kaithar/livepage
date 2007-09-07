@@ -1,8 +1,8 @@
- trunk - Dev Branch (r98)
+ trunk - Dev Branch (r100)
 ==========================
 
  - Allow sidebar separators to have an initial category. (r98, bug #130, bug #134)
- - Add fine grained templating control. (In progress) (r96)
+ - Add fine grained templating control. (In progress) (r96, r100, bug #4)
  - Some fixing and reworking of the install & upgrade scripts (r96, r97)
  - Change the footer text around a bit, including a dynamic bit. (r93, r94 bug #4)
  - Remove schema.sql, since it's out of date and redundant. (r92)

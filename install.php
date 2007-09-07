@@ -85,7 +85,9 @@ mysql_query("CREATE TABLE `cms_config`
   `lock_message` varchar(255) default NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
-print "Ok!<br/>Creating Template... ";
+print "Ok!<br/>Creating main template config... ";
+
+/* templating! */
 
 mysql_query("CREATE TABLE `cms_template_config`
 (
@@ -93,6 +95,38 @@ mysql_query("CREATE TABLE `cms_template_config`
   `template_data` text NOT NULL default '',
   PRIMARY KEY (`template_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+
+print "Ok!<br/>Creating template page config... ";
+
+mysql_query("CREATE TABLE `cms_template_page_config`
+(
+  `template_name` varchar(255) NOT NULL default '',
+  `template_page_id` int (10) NOT NULL default '1',
+  `template_data` text NOT NULL default '',
+  INDEX (`template_page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+
+print "Ok!<br/>Creating template section config... ";
+
+mysql_query("CREATE TABLE `cms_template_section_config`
+(
+  `template_name` varchar(255) NOT NULL default '',
+  `template_section_id` int (10) NOT NULL default '1',
+  `template_data` text NOT NULL default '',
+  INDEX (`template_section_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+
+print "Ok!<br/>Creating main template config... ";
+
+mysql_query("CREATE TABLE `cms_template_sidebar_config`
+(
+  `template_name` varchar(255) NOT NULL default '',
+  `template_sidebar_id` int(5) NOT NULL default '1',
+  `template_data` text NOT NULL default '',
+  INDEX (`template_sidebar_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
+
+/*-----*/
 
 print "Ok!<br/>Creating Menu... ";
 
@@ -185,7 +219,7 @@ print "Inserting site config...";
 mysql_query("
 INSERT INTO `cms_config`
            (`db_revision`, `site_name`, `logo`, `lock_message`)
-    VALUES ('6', 'LivePage', '/images/logo.png', NULL)") or die("Failed!");
+    VALUES ('7', 'LivePage', '/images/logo.png', NULL)") or die("Failed!");
 
 print "Ok!<br/>";
 
