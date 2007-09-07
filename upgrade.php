@@ -9,21 +9,32 @@ if (!defined("MASSUPGRADE"))
   require_once("includes/env_init.php");
 }
 
-print "<b>Grabbing config data...</b><br/>";
-
-$sql = mysql_query("SELECT * FROM `cms_config`") or die("Failed!");
-$site_config = mysql_fetch_assoc($sql);
-
-print "<b>Attempting to upgrade...</b><br/>";
-print "<i>Database at version: ".$site_config["db_revision"]."</i><br/><br/>";
-
 if (!function_exists("mysql_f_query"))
 {
   function mysql_f_query ($query)
   {
-    mysql_query($query) or die("Failed");
+    global $oldlock;
+    if (!mysql_query($query))
+    {
+      print "Failed! Attempting to undo lock.  ";
+      mysql_query("UPDATE `cms_config` set lock_message='".mysql_real_escape_string($oldlock)."'") or die("Failed!!!!");
+      die("Done");
+    }
   }
 }
+
+print "<b>Grabbing config data...</b><br/>";
+
+$sql = mysql_query("SELECT * FROM `cms_config`") or die("Failed.");
+$site_config = mysql_fetch_assoc($sql);
+
+print "<b>Locking database...</b><br/>";
+
+$oldlock = $site_config['lock_message'];
+mysql_query("UPDATE `cms_config` set lock_message='Upgrade in progress, please stand by.'") or die("Failed.");
+
+print "<b>Attempting to upgrade...</b><br/>";
+print "<i>Database at version: ".$site_config["db_revision"]."</i><br/><br/>";
 
 print "<ul>";
 switch($site_config["db_revision"])
@@ -108,6 +119,8 @@ switch($site_config["db_revision"])
     
   case 7:
     
+    print "<li>07 -> 08 --- Add header flag to the menu table</li>";
+    
     mysql_f_query("ALTER TABLE `cms_menu`
                            ADD `item_header` tinyint(1) unsigned NOT NULL default '0'
                          AFTER `item_separator`");
@@ -116,13 +129,23 @@ switch($site_config["db_revision"])
     
   case 8:
     
+    /*
+     * When updating the current db_revision, don't forget to update includes/db_revision_test.php and install.php please.
+     */
+    
     print "<li>Database upto date.</li>";
     break;
     
     
   default:
     
-    die ("Unknown db version!!!");
+    print "Unknown db version!!!";
+    break;
 }
 print "</ul>";
+
+print "<b>Unlocking database...</b><br/>";
+
+mysql_f_query("UPDATE `cms_config` set lock_message='".mysql_real_escape_string($oldlock)."'");
+
 ?>

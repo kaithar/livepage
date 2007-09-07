@@ -217,6 +217,10 @@ print "Ok!<br/>";
 
 print "Inserting site config...";
 
+/*
+ * When updating the db_revision, don't forget to update includes/db_revision_test.php and upgrade.php please.
+ */
+
 mysql_query("
 INSERT INTO `cms_config`
            (`db_revision`, `site_name`, `logo`, `lock_message`)

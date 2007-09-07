@@ -41,6 +41,10 @@ if (!defined("INSTALLER"))
   
   $sql = mysql_do_query("SELECT * FROM `cms_config`");
   $site_config = mysql_fetch_assoc($sql);
+  if ($site_config['lock_message'])
+    die($site_config['lock_message']);
+  
+  require_once("includes/db_revision_test.php");
 }
 
 ?>

@@ -1,6 +1,8 @@
- trunk - Dev Branch (r113)
+ trunk - Dev Branch (r114)
 ==========================
 
+ - Block site access when the database is out of date. (r114, bug #129)
+ - Made cms_config.lock_message function properly, and changes the upgrade code to use it. (r114, bug #129)
  - Adding extra includes for site specific html headers and a banner. (r112, bug #4)
  - Placed some sanity checks on the contents of keys (r105, r107, bug #97, bug #136)
  - Deny move to keys containing /, convert whitespace to _ (r102, r108, bug #136, bug #97)

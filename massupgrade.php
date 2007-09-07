@@ -8,7 +8,6 @@ if (!(include('config.php')))
   die("Please configure the software");
   
 if ($config['vhosts'] != 1) die("Not vhosted");
-if (!$config['disabled']) die("Not disabled");
 
 if ((!$config['massupgradepass'])||($config['massupgradepass'] != $_POST['pass']))
   die("<html><body><form method='POST'><input type='password' name='pass'/><input type='submit'/></form></body></html>");
