@@ -18,10 +18,18 @@
           {
             if (isset($visible_categories[$item['item_category']]))
             {
-              if ($item['item_separator'] == 0)
-                echo "<a href=\"{$item['item_url']}\">{$item['item_text']}</a>\n"; 
+              if ($item['item_separator'] == 1)
+              {
+                echo "</div>\n<br/>\n<div class=\"links\">\n";
+              }
+              else if ($item['item_header'] == 1)
+              {
+                echo "</div>\n<br/>\n<br/>\n<center><b>{$item['item_text']}</b></center>\n<div class=\"links\">\n";
+              }
               else
-                echo "</div><br/><div class=\"links\">\n";
+              {
+                echo "<a href=\"{$item['item_url']}\">{$item['item_text']}</a>\n";
+              }
             }
           }
         ?>

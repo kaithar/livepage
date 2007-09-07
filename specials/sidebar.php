@@ -11,6 +11,9 @@ $length = mysql_num_rows($menu) - 1;
 
 if (isset($page['params'][1]))
 {
+  /*
+   * Swap requested... 
+   */
   if (($page['params'][1] == "swap")&&isset($page['params'][2])&&$page['params'][3])
 	{
 		$lower = min($page['params'][2],$page['params'][3]);
@@ -25,6 +28,8 @@ if (isset($page['params'][1]))
 		}
 		else
 		{
+      /* Swap the two numbers round in the order using -1 as a temp
+       */
 			mysql_do_query("UPDATE `cms_menu`
 												SET `item_order`= -1 
 											WHERE `item_order`='".mysql_real_escape_string($lower)."'");
@@ -41,33 +46,58 @@ if (isset($page['params'][1]))
 	}
   else if ($page['params'][1] == "add")
   {
-    if (isset($_POST['submit']) && ($_POST['submit'] == "Add"))
+    /*
+     * Add an entry ... use the submit button used to decide what to insert.
+     */
+    if (isset($_POST['link']) && ($_POST['link'] == "Add as link"))
     {
+      /* Add a normal link to the menu */
       mysql_do_query("INSERT INTO `cms_menu`
                               SET `item_text` = '".mysql_real_escape_string($_POST['mtext'])."',
                                   `item_url` = '".mysql_real_escape_string($_POST['murl'])."',
                                   `item_category` = '".mysql_real_escape_string($_POST['mcategory'])."',
                                   `item_order` = '".mysql_real_escape_string($length+1)."',
-                                  `item_separator` = '0'");
+                                  `item_separator` = '0',
+                                  `item_header` = '0'");
     }
-    header("location: ".$page['path'].".sidebar");
-    die();
-  }
-  else if (($page['params'][1] == "separator") && (isset($page['params'][2])) && ($page['params'][2] == "add"))
-  {
-    mysql_do_query("INSERT INTO `cms_menu`
-                            SET `item_text` = 'Separator',
-                                `item_url` = 'Separator',
-                                `item_category` = '".mysql_real_escape_string($_POST['mcategory'])."',
-                                `item_order` = '".mysql_real_escape_string($length+1)."',
-                                `item_separator` = '1'");
+    else if (isset($_POST['separator']) && ($_POST['separator'] == "Add as separator"))
+    {
+      /* Add a separator to the menu */
+      mysql_do_query("INSERT INTO `cms_menu`
+                              SET `item_text` = 'Separator',
+                                  `item_url` = 'Separator',
+                                  `item_category` = '".mysql_real_escape_string($_POST['mcategory'])."',
+                                  `item_order` = '".mysql_real_escape_string($length+1)."',
+                                  `item_separator` = '1',
+                                  `item_header` = '0'");
+    }
+    else if (isset($_POST['header']) && ($_POST['header'] == "Add as header"))
+    {
+      /* Add a header to the menu */
+      mysql_do_query("INSERT INTO `cms_menu`
+                              SET `item_text` = '".mysql_real_escape_string($_POST['mtext'])."',
+                                  `item_url` = 'Header',
+                                  `item_category` = '".mysql_real_escape_string($_POST['mcategory'])."',
+                                  `item_order` = '".mysql_real_escape_string($length+1)."',
+                                  `item_separator` = '0',
+                                  `item_header` = '1'");
+    }
+    /* In any case, go back to the sidebar editing page */
     header("location: ".$page['path'].".sidebar");
     die();
   }
   else if (($page['params'][1] == "edit")&&(isset($page['params'][2])))
   {
+    /*
+     * Edit an entry.
+     * Depending on the type, hide certain parts of the form.
+     */
+    
     if (isset($_POST['submit']) && ($_POST['submit'] == "Submit"))
     {
+      /*
+       * Submitted form?!
+       */
       mysql_do_query("UPDATE `cms_menu` 
                          SET `item_text` = '".mysql_real_escape_string($_POST['mtext'])."',
                              `item_url` = '".mysql_real_escape_string($_POST['murl'])."',
@@ -76,6 +106,10 @@ if (isset($page['params'][1]))
       header("location: ".$page['path'].".sidebar");
       die();
     }
+    
+    /*
+     * Get menu item to edit
+     */
     $menuitem = mysql_do_query("SELECT *
                                   FROM `cms_menu`
                                  WHERE `item_id` = '".mysql_real_escape_string($page['params'][2])."'");
@@ -84,21 +118,58 @@ if (isset($page['params'][1]))
     $c = "<form action=\"{$page['path']}.sidebar.edit.{$page['params'][2]}\" method=\"POST\">";
     $c .= '<table border="0" cellpadding="5" cellspacing="0">';
     
+    /*
+     * Always display the category.
+     */
     $c .= "<tr><td>Category:</td>";
     $c .= "<td><select name=\"mcategory\" size=\"1\"/>";
     $c .= return_cat_tree_select($tree['tree'], $menuitem['item_category'])."</select></td></tr>";
     
-    $c .= "<tr><td>Menu text:</td>";
-    $c .= "<td><input type=\"text\" name=\"mtext\" value=\"{$menuitem['item_text']}\" size=\"50\"/></td></tr>";
+    $h = "";
     
-    $c .= "<tr><td>Menu link:</td>";
-    $c .= "<td><input type=\"text\" name=\"murl\" value=\"{$menuitem['item_url']}\" size=\"50\"/></td></tr>";
+    /*
+     * Separators don't have menu text, headers and links do.
+     */
+    if ($menuitem['item_separator'] == 1)
+    {
+      $h .= "<input type=\"hidden\" name=\"mtext\" value=\"{$menuitem['item_text']}\" size=\"50\"/>";
+    }
+    else
+    {
+      $c .= "<tr><td>Menu text:</td>";
+      $c .= "<td><input type=\"text\" name=\"mtext\" value=\"{$menuitem['item_text']}\" size=\"50\"/></td></tr>";
+    }
     
-    $c .= "<tr><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Submit\"/></td></tr></table></form>";
-    $content .= section("Edit menu item",$c);
+    /*
+     * Separators and headers don't have urls, links do.
+     */
+    if (($menuitem['item_separator'] == 1)||($menuitem['item_header'] == 1))
+    {
+      $h .= "<input type=\"hidden\" name=\"murl\" value=\"{$menuitem['item_url']}\" size=\"50\"/>";
+    }
+    else
+    {
+      $c .= "<tr><td>Menu link:</td>";
+      $c .= "<td><input type=\"text\" name=\"murl\" value=\"{$menuitem['item_url']}\" size=\"50\"/></td></tr>";
+    }
+    
+    /*
+     * Finish the form!
+     */
+
+    $c .= "<tr><td colspan=\"2\">{$h}<input type=\"submit\" name=\"submit\" value=\"Submit\"/></td></tr></table></form>";
+    
+    $title = "Link";
+    if ($menuitem['item_header'] == 1) $title = "Header";
+    if ($menuitem['item_separator'] == 1) $title = "Separator";
+    
+    $content .= section("Edit menu item: ".$title,$c);
   }
   else if (($page['params'][1] == "delete")&&(isset($page['params'][2])))
   {
+    /*
+     * Remove an item from the menu.
+     */
     $menuitem = mysql_do_query("SELECT * FROM `cms_menu`
         WHERE `item_id` = '".mysql_real_escape_string($page['params'][2])."'");
 
@@ -122,19 +193,31 @@ if (isset($page['params'][1]))
 }
 else
 {
+  /*
+   * Render the sidebar overview page.
+   */
+  
   $c = "<table border=\"1\" cellpadding=\"5\">";
   $c .= "<tr><th>Category</th><th>Menu Text</th><th>Target url</th><th>Actions</th></tr>";
   
   while ($item = mysql_fetch_assoc($menu))
   {
     $c .= "<tr><td>{$tree['ids'][$item['item_category']]['flat_path']}</td>";
-    if ($item['item_separator'] == 0)
+    
+    if ($item['item_separator'] == 1)
     {
-      $c .= "<td>{$item['item_text']}</td><td>{$item['item_url']}</td><td>";
+      /* Separators don't have content...*/
+      $c .= "<td colspan=\"2\"><i>Separator</i></td><td>";
+    }
+    else if ($item['item_header'] == 1)
+    {
+      /* Headers only have text...*/
+      $c .= "<td colspan=\"2\"><b>{$item['item_text']}</b></td><td>";
     }
     else
     {
-      $c .= "<td colspan=\"2\">Separator</td><td>";
+      /* Links have text and a link...*/
+      $c .= "<td>{$item['item_text']}</td><td>{$item['item_url']}</td><td>";
     }
     
     if ($item['item_order'] > 0) 
@@ -153,18 +236,6 @@ else
   
   $c .= "</table>";
   
-  /*----------------
-   * New separator
-   */
-  $c .= "<br/><br/><b>New Separator</b>";
-  $c .= "<form action=\"{$page['path']}.sidebar.separator.add\" method=\"POST\">";
-  $c .= '<table border="0" cellpadding="5" cellspacing="0">';
-  
-  $c .= "<tr><td>Category:</td>";
-  $c .= "<td><select name=\"mcategory\" size=\"1\"/>".return_cat_tree_select($tree['tree'])."</select></td></tr>";
-  
-  $c .= "<tr><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Add\"/></td></tr></table></form>";
-  
   /*---------------
    * New sidebar entry
    */
@@ -174,15 +245,21 @@ else
   $c .= '<table border="0" cellpadding="5" cellspacing="0">';
   
   $c .= "<tr><td>Category:</td>";
-  $c .= "<td><select name=\"mcategory\" size=\"1\"/>".return_cat_tree_select($tree['tree'])."</select></td></tr>";
+  $c .= "<td><select name=\"mcategory\" size=\"1\"/>".return_cat_tree_select($tree['tree'])."</select></td>";
+  $c .= "<td>-- Category to display in.  Used for all three sidebar entry types.</td></tr>";
   
   $c .= "<tr><td>Menu text:</td>";
-  $c .= "<td><input type=\"text\" name=\"mtext\" size=\"50\"/></td></tr>";
+  $c .= "<td><input type=\"text\" name=\"mtext\" size=\"50\"/></td>";
+  $c .= "<td>-- The text displayed for this entry.  Used for links and headers.</td></tr>";
   
   $c .= "<tr><td>Menu link:</td>";
-  $c .= "<td><input type=\"text\" name=\"murl\" size=\"50\"/></td></tr>";
+  $c .= "<td><input type=\"text\" name=\"murl\" size=\"50\"/></td>";
+  $c .= "<td>-- The location the link points to.  Only used for links.</td></tr>";
   
-  $c .= "<tr><td colspan=\"2\"><input type=\"submit\" name=\"submit\" value=\"Add\"/></td></tr></table></form>";
+  $c .= "<tr><td colspan=\"3\"><input type=\"submit\" name=\"separator\" value=\"Add as separator\"/>
+                               <input type=\"submit\" name=\"header\" value=\"Add as header\"/>
+                               <input type=\"submit\" name=\"link\" value=\"Add as link\"/>
+      </td></tr></table></form>";
   
   
   $content .= section("Sidebar config",$c);

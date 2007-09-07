@@ -100,9 +100,18 @@ switch($site_config["db_revision"])
       `template_data` text NOT NULL default '',
       INDEX (`template_sidebar_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
-    mysql_f_query("UPDATE `cms_config` SET db_revision='7'");   
+    mysql_f_query("UPDATE `cms_config` SET db_revision='7'");
+    
     
   case 7:
+    
+    mysql_f_query("ALTER TABLE `cms_menu`
+                           ADD `item_header` tinyint(1) unsigned NOT NULL default '0'
+                         AFTER `item_separator`");
+    mysql_f_query("UPDATE `cms_config` SET db_revision='8'");
+    
+    
+  case 8:
     
     print "<li>Database upto date.</li>";
     break;
