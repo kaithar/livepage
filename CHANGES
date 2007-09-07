@@ -1,7 +1,7 @@
- trunk - Dev Branch (r105)
+ trunk - Dev Branch (r107)
 ==========================
 
- - Placed some sanity checks on the contents of keys (r105)
+ - Placed some sanity checks on the contents of keys (r105, r107, bug #97, bug #136)
  - Deny move to keys containing /, convert whitespace to _ (r102, bug #136, bug #97)
  - Make the sidebar item adding form slightly nicer to look at and rework some of the specials/sidebar code to be nicer. (r101)
  - Add support for sidebar menu headers. (r101)

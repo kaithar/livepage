@@ -12,9 +12,9 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == "Submit" && isset($tree['ids'
 	
 	$cat = mysql_real_escape_string($_POST['category']);
   
-  if (strpos($key,"/") !== FALSE)
+  if (preg_match("^[/#\n\r\.\?\&]^"$key,"/") !== FALSE)
   {
-    $content .= "Please do not use the character '/' in the name!";
+    $content .= "Please do not use the characters '/', '#', '.', '?', '&' or line breaks in the name!";
   }
   else
   {
