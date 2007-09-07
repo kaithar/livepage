@@ -12,9 +12,10 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == "Submit" && isset($tree['ids'
 	
 	$cat = mysql_real_escape_string($_POST['category']);
   
-  if (preg_match("^[/#\n\r\.\?\&]^"$key,"/") !== FALSE)
+  if (preg_match("/^[a-zA=Z0-9_\!()\^]+$/"$key,"/") === FALSE)
   {
-    $content .= "Please do not use the characters '/', '#', '.', '?', '&' or line breaks in the name!";
+    $content .= "Please use only letters (a to z), numbers (0-9), '_', '!', '(', ')' and '^' in key names.<br/>";
+    $content .= "If you feel that this range is insufficent, please file a bug.<br/><br/>";
   }
   else
   {
