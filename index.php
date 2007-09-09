@@ -11,7 +11,7 @@ require_once ("includes/templating.php");
 // $_SERVER['REQUEST_URI'] is like "/foo/bar"
 $requested = $_SERVER['REQUEST_URI'];
 
-// For the purpose of this, see templates/header.php and specials/config.php
+// For the purpose of this, see templates/simplicity/header.php and specials/config.php
 $admining = 0;
 
 /*****************************************************************************************************

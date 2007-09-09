@@ -80,6 +80,7 @@ mysql_query("CREATE TABLE `cms_config`
 (
   `db_revision` int(10) unsigned NOT NULL default '1',
   `site_name` varchar(255) NOT NULL default 'LivePage',
+  `template` varchar(255) NOT NULL default 'simplicity',
   `logo` varchar(255) NOT NULL default 'images/logo.png',
   `footer` varchar(255) NOT NULL default '',
   `lock_message` varchar(255) default NULL
@@ -223,8 +224,8 @@ print "Inserting site config...";
 
 mysql_query("
 INSERT INTO `cms_config`
-           (`db_revision`, `site_name`, `logo`, `lock_message`)
-    VALUES ('8', 'LivePage', '/images/logo.png', NULL)") or die("Failed!");
+           (`db_revision`, `site_name`, `template`, `logo`, `lock_message`)
+    VALUES ('9', 'LivePage', 'simplicity', '/images/logo.png', NULL)") or die("Failed!");
 
 print "Ok!<br/>";
 

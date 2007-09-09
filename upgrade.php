@@ -129,6 +129,16 @@ switch($site_config["db_revision"])
     
   case 8:
     
+    print "<li>08 -> 09 --- Add template choice to config table</li>";
+    
+    mysql_f_query("ALTER TABLE `cms_config`
+                           ADD `template` varchar(255) NOT NULL default 'simplicity'
+                         AFTER `site_name`");
+    mysql_f_query("UPDATE `cms_config` SET db_revision='9', template='simplicity'");
+    
+    
+  case 9:
+    
     /*
      * When updating the current db_revision, don't forget to update includes/db_revision_test.php and install.php please.
      */

@@ -12,7 +12,7 @@ elseif (file_exists('files/'.$domain.'/templates/style.css'))
 }
 else
 {
-  require_once("templates/style.php");
+  require_once("templates/".$site_config['template']."/style.php");
 }
 
 die();
