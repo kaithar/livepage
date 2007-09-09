@@ -141,7 +141,7 @@ while ($item = mysql_fetch_assoc($mylinks))
 					    <?php if ($page['found'])
 				      { ?>
                 <a href="<?php echo $page['path'];?>.createsection">New Section</a>
-                <a href="<?php echo $page['path'];?>.edittitle">Edit Title</a>
+                <a href="<?php echo $page['path'];?>.pageconfig">Page Settings</a>
                 <a href="<?php echo $page['path'];?>.move">Move</a>
                 <a href="<?php echo $page['path'];?>.delpage">Nuke Page</a>
 					    <?php } ?>

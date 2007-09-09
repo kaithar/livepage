@@ -198,8 +198,8 @@ if ($page['params'])
       case "delpage":
         include("specials/delpage.php");
         break;
-      case "edittitle":
-        include("specials/edittitle.php");
+      case "pageconfig":
+        include("specials/pageconfig.php");
         break;
       case "move":
         include("specials/move.php");

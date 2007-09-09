@@ -1,6 +1,7 @@
- trunk - Dev Branch (r115)
+ trunk - Dev Branch (r118)
 ==========================
 
+ - Move specials/edittitle.php to specials/pageconfig.php to better utilise a whole ton of page space. (r118)
  - Block site access when the database is out of date. (r114, bug #129)
  - Made cms_config.lock_message function properly, and changes the upgrade code to use it. (r114, bug #129)
  - Adding extra includes for site specific html headers and a banner. (r112, bug #4)
@@ -9,7 +10,7 @@
  - Make the sidebar item adding form slightly nicer to look at and rework some of the specials/sidebar code to be nicer. (r101)
  - Add support for sidebar menu headers. (r101, r113)
  - Allow sidebar separators to have an initial category. (r98, bug #130, bug #134)
- - Add fine grained templating control. (In progress) (r96, r100, r115, bug #4)
+ - Add fine grained templating control. (In progress) (r96, r100, r115, r116, r117, bug #4)
  - Some fixing and reworking of the install & upgrade scripts (r96, r97)
  - Change the footer text around a bit, including a dynamic bit. (r93, r94 bug #4)
  - Remove schema.sql, since it's out of date and redundant. (r92)
