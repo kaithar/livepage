@@ -119,12 +119,12 @@ mysql_query("CREATE TABLE `cms_template_section_config`
 
 print "Ok!<br/>Creating main template config... ";
 
-mysql_query("CREATE TABLE `cms_template_sidebar_config`
+mysql_query("CREATE TABLE `cms_template_menu_config`
 (
   `template_name` varchar(255) NOT NULL default '',
-  `template_sidebar_id` int(5) NOT NULL default '1',
+  `template_menu_id` int(5) NOT NULL default '1',
   `template_data` text NOT NULL default '',
-  INDEX (`template_sidebar_id`)
+  INDEX (`template_menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci") or die("Failed!");
 
 /*-----*/
@@ -225,7 +225,7 @@ print "Inserting site config...";
 mysql_query("
 INSERT INTO `cms_config`
            (`db_revision`, `site_name`, `template`, `logo`, `lock_message`)
-    VALUES ('9', 'LivePage', 'simplicity', '/images/logo.png', NULL)") or die("Failed!");
+    VALUES ('10', 'LivePage', 'simplicity', '/images/logo.png', NULL)") or die("Failed!");
 
 print "Ok!<br/>";
 

@@ -5,7 +5,7 @@
  * Please keep this file in sync with what is in install.php and upgrade.php.
  */
 
-if ($site_config['db_revision'] != 9)
+if ($site_config['db_revision'] != 10)
 {
   die("Please wait.  Upgrade in progess!<br/>If this message remains for an extended period, please contact the admins.");
 }

@@ -139,6 +139,26 @@ switch($site_config["db_revision"])
     
   case 9:
     
+    print "<li>09 -> 10 -- Rename cms_template_sidebar_config to cms_template_menu_config</li>";
+
+    mysql_f_query("CREATE TABLE `cms_template_menu_config`
+    (
+      `template_name` varchar(255) NOT NULL default '',
+      `template_menu_id` int(5) NOT NULL default '1',
+      `template_data` text NOT NULL default '',
+      INDEX (`template_menu_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+
+    mysql_f_query("INSERT INTO `cms_template_menu_config`
+                        SELECT *
+                          FROM `cms_template_sidebar_config`");
+    
+    mysql_f_query("DROP TABLE `cms_template_sidebar_config`");
+
+    mysql_f_query("UPDATE `cms_config` SET db_revision='10'");
+    
+  case 10:
+    
     /*
      * When updating the current db_revision, don't forget to update includes/db_revision_test.php and install.php please.
      */
