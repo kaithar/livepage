@@ -1,11 +1,95 @@
+<?php
+
+$settings = Array (
+  "title_bg" => "",
+  "menu_bg"=> ""
+);
+
+if ($site_config['template_data'] != "")
+{
+  $s = explode(";", $site_config['template_data']);
+  foreach ($s as $ss)
+  {
+    $ss = explode(":",$ss);
+    $settings[$ss[0]] = $ss[1];
+  }
+}
+
+if ($page['template_data'] != "")
+{
+  $s = explode(";", $page['template_data']);
+  foreach ($s as $ss)
+  {
+    $ss = explode(":",$ss);
+    $settings[$ss[0]] = $ss[1];
+  } 
+}
+
+$menu_links = Array();
+$menu_css = "";
+$mylinks = mysql_do_query(
+    "SELECT * 
+       FROM `cms_menu`
+  LEFT JOIN `cms_template_menu_config` ON `template_menu_id` = `item_id`
+      WHERE `template_name` IS NULL
+         OR `template_name` = '".mysql_real_escape_string($site_config['template'])."'
+   ORDER BY `item_order` ASC");
+
+while ($item = mysql_fetch_assoc($mylinks))
+{
+  if (isset($visible_categories[$item['item_category']]))
+  {            
+    /*
+     * Per menu item css
+     */
+    $menu_item_css = "";
+    
+    if ($item['template_data'] != "")
+    {
+      $s = explode(";", $item['template_data']);
+      foreach ($s as $ss)
+      {
+        $ss = explode(":",$ss);
+        switch ($ss[0])
+        {
+          case "bg":
+            $menu_item_css .= "background: ".$ss[1].";";
+            break;
+        }
+      }
+    }
+    
+    if ($menu_item_css != "")
+    {
+      if ($item['item_header'])
+        $menu_css .= "div.linkbox span.linkbar".$item['item_id']." { ".$menu_item_css." }\n";
+      else
+        $menu_css .= "div.links a.linkbar".$item['item_id'].":hover { ".$menu_item_css." }\n";
+    }
+    
+    $menu_links[] = $item;
+  }
+}
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
   <meta http-equiv="Content-Type" content="text/html;"/>
   <link rel="stylesheet" href="/style.css" type="text/css"/>
   <title><?php echo $site_config['site_name']." - ".$page['page_title'];?></title>
-  <?php if (file_exists('files/'.$domain.'/templates/html_head.php'))
-      require_once('files/'.$domain.'/templates/html_head.php'); ?>
+  <?php
+    if (file_exists('files/'.$domain.'/templates/html_head.php'))
+      require_once('files/'.$domain.'/templates/html_head.php');
+  ?>
+  <style>
+    <?php
+      if ($settings['title_bg'] != "")
+        echo "div.section div.title { background: ".$settings['title_bg']."; }\n";
+      if ($settings['menu_bg'] != "")
+        echo "div.links a:hover { background: ".$settings['menu_bg']."; }\n";
+      echo $menu_css;
+    ?>
+  </style>
  </head>
  <body>
   <?php if (file_exists('files/'.$domain.'/templates/banner.php'))
@@ -17,23 +101,22 @@
      <div class="linkbox">
        <div class="links">
         <?php 
-          $mylinks = mysql_do_query("SELECT * FROM `cms_menu` ORDER BY `item_order` ASC");
-          while ($item = mysql_fetch_assoc($mylinks))
+          foreach ($menu_links as $item)
           {
-            if (isset($visible_categories[$item['item_category']]))
+            /*
+             * On with the displaying
+             */
+            if ($item['item_separator'] == 1)
             {
-              if ($item['item_separator'] == 1)
-              {
-                echo "</div>\n<br/>\n<div class=\"links\">\n";
-              }
-              else if ($item['item_header'] == 1)
-              {
-                echo "</div>\n<br/>\n<center><b>{$item['item_text']}</b></center>\n<div class=\"links\">\n";
-              }
-              else
-              {
-                echo "<a href=\"{$item['item_url']}\">{$item['item_text']}</a>\n";
-              }
+              echo "</div>\n<br/>\n<div class=\"links\">\n";
+            }
+            else if ($item['item_header'] == 1)
+            {
+              echo "</div>\n<br/>\n<span class=\"header linkbar{$item['item_id']}\">{$item['item_text']}</span>\n<div class=\"links\">\n";
+            }
+            else
+            {
+              echo "<a class=\"linkbar{$item['item_id']}\" href=\"{$item['item_url']}\">{$item['item_text']}</a>\n";
             }
           }
         ?>

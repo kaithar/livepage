@@ -81,6 +81,16 @@ div.links a:hover {
   background: #D4DCFF;
 }
 
+div.linkbox span.header
+{
+  display: block;
+  padding: 2px 10px 2px 10px;
+  text-align: center;
+  color: black;
+  font-size: 1.0em;
+  font-weight: bold;
+}
+
 /*-----------------*/
 
 div.section

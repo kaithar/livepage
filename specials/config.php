@@ -1,5 +1,7 @@
 <?php
 
+require_once("templates/".$site_config['template']."/template_config.php");
+
 $admining = 1;
 
 if (isset($_POST['general']) && $_POST['general'] == "Submit")
@@ -12,6 +14,23 @@ if (isset($_POST['general']) && $_POST['general'] == "Submit")
                          `footer` = '$footer'");
   header("location: ".$page['path'].".config");
   die();
+}
+
+if (isset($_POST['template']) && $_POST['template'] == "Submit")
+{
+  $template_data = template_global_config_post($_POST);
+  if (is_array($template_data))
+  {
+    $content .= $template_data['error'];
+  }
+  else
+  {
+    mysql_do_query("UPDATE `cms_template_config` 
+                       SET `template_data`='".mysql_real_escape_string($template_data)."'
+                     WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'");
+    header("location: ".$page['path'].".config");
+    die();
+  }
 }
 
 if (isset($_POST['logo']) && $_POST['logo'] == "Upload")
@@ -63,5 +82,11 @@ $c .= "<input type=\"submit\" name=\"logo\" value=\"Upload\"/>";
 $c .= "</form>";
 
 $content .= section("Upload Logo",$c);
+
+$c = "<form action=\"{$page['path']}.config\" method=\"POST\">";
+$c .= template_global_config_form();
+$c .= "<input type=\"Submit\" name=\"template\" value=\"Submit\"></form>";
+
+$content .= section("Global Template Config",$c);
 
 ?>

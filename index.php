@@ -24,6 +24,26 @@ if (preg_match("|^/files/|", $requested))
 }
 
 /*****************************************************************************************************
+ * Now's as good a time as any to grab the global template data.
+ */
+
+$ti = mysql_do_query("SELECT *
+                         FROM `cms_template_config`
+                        WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'
+                        LIMIT 1");
+if (mysql_num_rows($ti) != 1)
+{
+  $site_config['template_data'] = "";
+}
+  else
+{
+  $ti = mysql_fetch_assoc($ti);
+  $site_config['template_data'] = $ti['template_data'];
+}
+
+unset($ti);
+
+/*****************************************************************************************************
  * This code is designed to match "/foo/" and "/foo/.handler".
  * It inserts index, converting the url to "/foo/index" and "/foo/index.handler" respectively.
  */
@@ -113,6 +133,21 @@ else
 {
   $page = mysql_fetch_assoc($mypage);
 	$page['found'] = true;
+  $pti = mysql_do_query("SELECT *
+                           FROM `cms_template_page_config`
+                          WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'
+                            AND `template_page_id` = '".mysql_real_escape_string($page['page_id'])."'
+                          LIMIT 1");
+  if (mysql_num_rows($pti) != 1)
+  {
+    $page['template_data'] = "";
+  }
+  else
+  {
+    $pti = mysql_fetch_assoc($pti);
+    $page['template_data'] = $pti['template_data'];
+  }
+  unset($pti);
 }
 
 $page['parent_path'] = $parent_path ? $parent_path : "/";
@@ -204,7 +239,11 @@ if ($showpage)
 {
   $mysections = mysql_do_query("SELECT *
                                   FROM `cms_sections`
+                             LEFT JOIN `cms_template_section_config` ON `template_section_id` = `section_id`
                                  WHERE `page_id`='".mysql_real_escape_string($page['page_id'])."'
+                                   AND ( `template_name` IS NULL
+                                      OR `template_name` = '".mysql_real_escape_string($site_config['template'])."'
+                                       )
                               ORDER BY `order` ASC");
 	
 	if (mysql_num_rows($mysections) == 0)
@@ -241,7 +280,8 @@ if ($showpage)
 					:''
 				).
 				'&nbsp;',
-				nl2br($section['section_text'])
+				nl2br($section['section_text']),
+        $section['template_data']
 			);
 		}
 		$content .= $links . $body;
