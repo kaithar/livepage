@@ -28,6 +28,13 @@ if (isset($_POST['template']) && $_POST['template'] == "Submit")
     mysql_do_query("UPDATE `cms_template_config` 
                        SET `template_data`='".mysql_real_escape_string($template_data)."'
                      WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'");
+    
+    if (mysql_affected_rows() == 0)
+    {
+      mysql_do_query("INSERT INTO `cms_template_config` 
+                         SET `template_data`='".mysql_real_escape_string($template_data)."',
+                             `template_name` = '".mysql_real_escape_string($site_config['template'])."'");
+    }
     header("location: ".$page['path'].".config");
     die();
   }

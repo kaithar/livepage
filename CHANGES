@@ -1,4 +1,4 @@
- trunk - Dev Branch (r118)
+ trunk - Dev Branch (r119)
 ==========================
 
  - Move specials/edittitle.php to specials/pageconfig.php to better utilise a whole ton of page space. (r118)
@@ -10,7 +10,7 @@
  - Make the sidebar item adding form slightly nicer to look at and rework some of the specials/sidebar code to be nicer. (r101)
  - Add support for sidebar menu headers. (r101, r113)
  - Allow sidebar separators to have an initial category. (r98, bug #130, bug #134)
- - Add fine grained templating control. (In progress) (r96, r100, r115, r116, r117, bug #4)
+ - Add fine grained templating control. (In progress) (r96, r100, r115, r116, r117, r119, bug #4)
  - Some fixing and reworking of the install & upgrade scripts (r96, r97)
  - Change the footer text around a bit, including a dynamic bit. (r93, r94 bug #4)
  - Remove schema.sql, since it's out of date and redundant. (r92)
