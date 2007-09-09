@@ -1,12 +1,20 @@
 <?php
 
 require_once("includes/cat_tree.php");
+require_once("templates/".$site_config['template']."/template_config.php");
 
 $admining = 1;
 
 $tree = build_cat_tree();
 
-$menu = mysql_do_query("SELECT * FROM `cms_menu` ORDER BY `item_order` ASC");
+$menu = mysql_do_query(
+    "SELECT * 
+       FROM `cms_menu`
+  LEFT JOIN `cms_template_menu_config` ON `template_menu_id` = `item_id`
+      WHERE `template_name` IS NULL
+         OR `template_name` = '".mysql_real_escape_string($site_config['template'])."'
+   ORDER BY `item_order` ASC");
+   
 $length = mysql_num_rows($menu) - 1;
 
 if (isset($page['params'][1]))
@@ -93,6 +101,12 @@ if (isset($page['params'][1]))
      * Depending on the type, hide certain parts of the form.
      */
     
+    while ($menuitem = mysql_fetch_assoc($menu))
+    {
+      if ($menuitem['item_id'] == $page['params'][2])
+        break;
+    }
+    
     if (isset($_POST['submit']) && ($_POST['submit'] == "Submit"))
     {
       /*
@@ -103,17 +117,40 @@ if (isset($page['params'][1]))
                              `item_url` = '".mysql_real_escape_string($_POST['murl'])."',
                              `item_category` = '".mysql_real_escape_string($_POST['mcategory'])."'
                        WHERE `item_id` = '".mysql_real_escape_string($page['params'][2])."'");
+      
+      $template_data = template_menu_config_post($_POST);
+      
+      if (!is_array($template_data))
+      {
+        if ($template_data != $menuitem['template_data'])
+        {
+          if ($template_data == "")
+          {
+            mysql_do_query("DELETE FROM `cms_template_menu_config` 
+                                  WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'
+                                    AND `template_menu_id` = '".mysql_real_escape_string($menuitem['item_id'])."'");
+          }
+          else
+          {
+            mysql_do_query("UPDATE `cms_template_menu_config` 
+                               SET `template_data`='".mysql_real_escape_string($template_data)."'
+                             WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'
+                               AND `template_menu_id` = '".mysql_real_escape_string($menuitem['item_id'])."'");
+        
+            if (mysql_affected_rows() == 0)
+            {
+              mysql_do_query("INSERT INTO `cms_template_menu_config` 
+                                      SET `template_data`='".mysql_real_escape_string($template_data)."',
+                                          `template_menu_id` = '".mysql_real_escape_string($menuitem['item_id'])."',
+                                          `template_name` = '".mysql_real_escape_string($site_config['template'])."'");
+            }
+          }
+        }
+      }
+      
       header("location: ".$page['path'].".sidebar");
       die();
     }
-    
-    /*
-     * Get menu item to edit
-     */
-    $menuitem = mysql_do_query("SELECT *
-                                  FROM `cms_menu`
-                                 WHERE `item_id` = '".mysql_real_escape_string($page['params'][2])."'");
-    $menuitem = mysql_fetch_assoc($menuitem);
     
     $c = "<form action=\"{$page['path']}.sidebar.edit.{$page['params'][2]}\" method=\"POST\">";
     $c .= '<table border="0" cellpadding="5" cellspacing="0">';
@@ -152,6 +189,13 @@ if (isset($page['params'][1]))
       $c .= "<tr><td>Menu link:</td>";
       $c .= "<td><input type=\"text\" name=\"murl\" value=\"{$menuitem['item_url']}\" size=\"50\"/></td></tr>";
     }
+    
+    /*
+     * Templating stuff
+     */
+    
+    $c .= "<tr><td>Templating:</td><td>".template_menu_config_form($menuitem)."</td></tr>";
+
     
     /*
      * Finish the form!

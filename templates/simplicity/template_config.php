@@ -33,8 +33,8 @@ function template_global_config_post($post)
   global $site_config;
   $template_data = Array();
   
-  $title_bg = $post['title_bg'];
-  $menu_bg = $post['menu_bg'];
+  $title_bg = trim($post['title_bg']);
+  $menu_bg = trim($post['menu_bg']);
   
   if ($title_bg)
   {
@@ -86,8 +86,8 @@ function template_page_config_post($post)
   global $site_config;
   $template_data = Array();
   
-  $title_bg = $post['title_bg'];
-  $menu_bg = $post['menu_bg'];
+  $title_bg = trim($post['title_bg']);
+  $menu_bg = trim($post['menu_bg']);
   
   if ($title_bg)
   {
@@ -135,7 +135,7 @@ function template_section_config_post($post)
 {
   $template_data = Array();
   
-  $title_bg = $post['title_bg'];
+  $title_bg = trim($post['title_bg']);
   
   if ($title_bg)
   {
@@ -148,5 +148,44 @@ function template_section_config_post($post)
   return implode(";", $template_data);
 }
 
+/***** Menu config ****/
+
+function template_menu_config_form ($item)
+{
+  $settings = Array (
+    "bg" => ""
+  );
+
+  if ($item['template_data'] != "")
+  {
+    $s = explode(";", $item['template_data']);
+    foreach ($s as $ss)
+    {
+      $ss = explode(":",$ss);
+      $settings[$ss[0]] = $ss[1];
+    }
+  }
+  
+  $c = "Background colour, hover on links, normal on headers (Optional): ";
+  $c .= "<input type=\"text\" name=\"bg\" size=\"25\" value=\"{$settings['bg']}\"><br/><br/>";
+  return $c;
+}
+
+function template_menu_config_post($post)
+{
+  $template_data = Array();
+  
+  $bg = trim($post['bg']);
+  
+  if ($bg)
+  {
+    if (preg_match("/^#[0-9a-fA-F]{1,6}$/", $bg))
+      $template_data[] = "bg:".$bg;
+    else
+      return Array('error' => "Please use only standard html hex notation colours.<br/><br/>");
+  }
+  
+  return implode(";", $template_data);
+}
 
 ?>
