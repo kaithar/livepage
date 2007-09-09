@@ -30,7 +30,7 @@ if (isset($_POST['template']) && $_POST['template'] == "Submit")
     {
       if ($template_data == "")
       {
-        mysql_do_query("DELETE FROM `cms_template_page_config` 
+        mysql_do_query("DELETE FROM `cms_template_config` 
                               WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'");
       }
       else
