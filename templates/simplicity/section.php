@@ -2,6 +2,7 @@
  function section($title, $content, $template_data = "")
 {
   $title_css = "";
+  $noborder = false;
 
   if ($template_data != "")
   {
@@ -14,12 +15,18 @@
         case "title_bg":
           $title_css .= "background: ".$ss[1].";";
           break;
+        case "noborder":
+          $noborder = true;
+          break;
       }
     }
   }
+  
+  if ($noborder == false)
+    $title .= "&nbsp;";
 
   return "
-     <div class=\"section\">
+     <div class=\"section".($noborder?"_noborder":"")."\">
       <div class=\"title\" style=\"$title_css\">$title</div>
       <div class=\"content\">
         $content

@@ -22,9 +22,9 @@ function template_global_config_form ()
   }
   
   $c = "Section title background colour: ";
-  $c .= "<input type=\"text\" name=\"title_bg\" size=\"95\" value=\"{$settings['title_bg']}\"><br/><br/>";
+  $c .= "<input type=\"text\" name=\"title_bg\" size=\"95\" value=\"{$settings['title_bg']}\"/><br/><br/>";
   $c .= "Menu hover background colour: ";
-  $c .= "<input type=\"text\" name=\"menu_bg\" size=\"95\" value=\"{$settings['menu_bg']}\"><br/><br/>";
+  $c .= "<input type=\"text\" name=\"menu_bg\" size=\"95\" value=\"{$settings['menu_bg']}\"/><br/><br/>";
   return $c;
 }
 
@@ -75,9 +75,9 @@ function template_page_config_form ($page)
   }
   
   $c = "Section title background colour: ";
-  $c .= "<input type=\"text\" name=\"title_bg\" size=\"95\" value=\"{$settings['title_bg']}\"><br/><br/>";
+  $c .= "<input type=\"text\" name=\"title_bg\" size=\"95\" value=\"{$settings['title_bg']}\"/><br/><br/>";
   $c .= "Menu hover background colour: ";
-  $c .= "<input type=\"text\" name=\"menu_bg\" size=\"95\" value=\"{$settings['menu_bg']}\"><br/><br/>";
+  $c .= "<input type=\"text\" name=\"menu_bg\" size=\"95\" value=\"{$settings['menu_bg']}\"/><br/><br/>";
   return $c;
 }
 
@@ -113,7 +113,8 @@ function template_page_config_post($post)
 function template_section_config_form ($section)
 {
   $settings = Array (
-    "title_bg" => ""
+    "title_bg" => "",
+    "noborder" => 0
   );
 
   if ($section['template_data'] != "")
@@ -127,7 +128,8 @@ function template_section_config_form ($section)
   }
   
   $c = "Section title background colour (Optional): ";
-  $c .= "<input type=\"text\" name=\"title_bg\" size=\"25\" value=\"{$settings['title_bg']}\"><br/><br/>";
+  $c .= "<input type=\"text\" name=\"title_bg\" size=\"25\" value=\"{$settings['title_bg']}\"/><br/><br/>";
+  $c .= "Hide borders: <input type=\"checkbox\" name=\"noborder\" size=\"25\"".($settings['noborder']?" CHECKED":"")."/><br/><br/>";
   return $c;
 }
 
@@ -136,6 +138,7 @@ function template_section_config_post($post)
   $template_data = Array();
   
   $title_bg = trim($post['title_bg']);
+  $noborder = isset($post['noborder'])?true:false;
   
   if ($title_bg)
   {
@@ -144,6 +147,9 @@ function template_section_config_post($post)
     else
       return Array('error' => "Please use only standard html hex notation colours.<br/><br/>");
   }
+  
+  if ($noborder)
+    $template_data[] = "noborder:1";
   
   return implode(";", $template_data);
 }
@@ -167,7 +173,7 @@ function template_menu_config_form ($item)
   }
   
   $c = "Background colour, hover on links, normal on headers (Optional): ";
-  $c .= "<input type=\"text\" name=\"bg\" size=\"25\" value=\"{$settings['bg']}\">";
+  $c .= "<input type=\"text\" name=\"bg\" size=\"25\" value=\"{$settings['bg']}\"/>";
   return $c;
 }
 

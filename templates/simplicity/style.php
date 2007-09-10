@@ -115,4 +115,24 @@ div.section div.content
 
 /*-----------------*/
 
+div.section_noborder
+{
+  padding: 0px 0 0 0px;
+  margin: 0 0 15px 0;
+}
+
+div.section_noborder div.title
+{
+  padding: 5px 5px 0px 0px;
+  font-weight: bold;
+}
+
+div.section_noborder div.content
+{
+  padding: 0px 0 0 0px;
+  clear: right;
+}
+
+/*-----------------*/
+
 

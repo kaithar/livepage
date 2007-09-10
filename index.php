@@ -263,7 +263,7 @@ if ($showpage)
 				'<a name="s'.$section['order'].'"/>'.$section['section_title'].
 				(
 					($user['editcontent'] == 1)
-					?'<div style="float:right;position:relative;top:-1.2em;">(Move '.
+          ?'<div style="float:right;position:relative;top:-'.($section['section_title']?'1.2':'0.5').'em;">(Move '.
 						(
 							($section['order']>0)
 							?'<a href="'.$page['path'].'.swap.'.($section['order']-1).'.'.$section['order'].'">Up</a>'
@@ -278,8 +278,7 @@ if ($showpage)
 						', <a href="'.$page['path'].'.edit.'.$section['section_id'].'">Edit</a>'.
 						', <a href="'.$page['path'].'.del.'.$section['section_id'].'">Del</a>)</div>'
 					:''
-				).
-				'&nbsp;',
+				),
 				nl2br($section['section_text']),
         $section['template_data']
 			);
