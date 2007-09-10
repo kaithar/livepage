@@ -167,7 +167,7 @@ function template_menu_config_form ($item)
   }
   
   $c = "Background colour, hover on links, normal on headers (Optional): ";
-  $c .= "<input type=\"text\" name=\"bg\" size=\"25\" value=\"{$settings['bg']}\"><br/><br/>";
+  $c .= "<input type=\"text\" name=\"bg\" size=\"25\" value=\"{$settings['bg']}\">";
   return $c;
 }
 
