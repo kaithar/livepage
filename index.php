@@ -128,6 +128,7 @@ if (mysql_num_rows($mypage) != 1)
 	$page['page_id'] = -1;
 	$page['parent'] = $parent;
 	$page['page_include'] = "pages/404.php";
+  $page['template_data'] = "";
 }
 else
 {
