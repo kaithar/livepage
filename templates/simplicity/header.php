@@ -132,6 +132,7 @@ while ($item = mysql_fetch_assoc($mylinks))
           <center><b>Admin</b></center>
           <div class="links">
 					  <a href="<?php echo $page['path'];?>.config">Site Config</a>
+					  <a href="<?php echo $page['path'];?>.structure">Site Structure</a>
 						<a href="<?php echo $page['path'];?>.sidebar">Edit Sidebar</a>
 			    </div>
 					<?php if ($admining == 0) { ?>

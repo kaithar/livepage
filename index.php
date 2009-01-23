@@ -205,6 +205,9 @@ if ($page['params'])
       case "move":
         include("specials/move.php");
         break;
+      case "structure":
+        include("specials/structure.php");
+        break;
       default:
         // Okie, so it isn't an admin header... but we're not giving up yet...
         $showpage = 1;
