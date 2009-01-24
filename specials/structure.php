@@ -28,7 +28,7 @@ function makePagesDiv($cat)
 
 function makeCatListDiv($cat)
 {
-  $c = '<div id="cat'.$cat['cat_parent'].'" style="padding: 3px 3px 3px 15px;">';
+  $c = '<div id="cat'.$cat['cat_parent'].'" style="padding: 3px 3px 0px 15px; border-left: 1px solid #999;">';
   $c .= '<span style="font-family: monospace; font-size: 0.7em; font-weight: bold;">';
   if ($cat['children'])
   	$c .= '<a style="text-decoration: none; border: 1px solid #999; padding: 0px 3px 0px 3px;" id="a'.$cat['cat_id'].'" href="javascript:toggleVis('.$cat['cat_id'].');">-</a> </span>';
