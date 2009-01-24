@@ -165,6 +165,6 @@ $content .= '<div id="pagesDiv" style="margin: 0px 0px 0px 210px; border: 1px so
 
 //$content .= '<script type="text/javascript">'.$js.'</script>';
 
-$content .= "<br/><br/><pre>".print_r($tree['tree'],true)."</pre>";
+//$content .= "<br/><br/><pre>".print_r($tree['tree'],true)."</pre>";
 
 ?>
