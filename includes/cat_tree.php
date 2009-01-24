@@ -9,7 +9,7 @@ function recursive_tree_path(&$flat, &$node, $flat_path, $path)
 	$node['flat_path'] = $flat_path;
 	$node['path'] = $path;
 	$flat[] = &$node;
-	$path .= "/";
+	if ($path != "/") $path .= "/";
 	foreach ($node['children'] as $k => $v)
 		recursive_tree_path($flat, $node['children'][$k], $flat_path, $path);
 }
@@ -39,7 +39,7 @@ function build_cat_tree()
 		}
 	}
 	
-	recursive_tree_path($tree['flat'],$tree['tree'],"","");
+	recursive_tree_path($tree['flat'],$tree['tree'],"","/");
 	return $tree;
 }
 

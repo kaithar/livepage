@@ -6,18 +6,14 @@ $admining = 1;
 
 $tree = build_cat_tree();
 
-$js = "";
-
-function makeCatDiv($cat, $root = false)
+function makePagesDiv($cat)
 {
-  global $js;
-  $c = '<div id="cat'.$cat['cat_id'].'" style="margin: 10px; padding: 5px; border: 1px solid #999; '.($root?'':'display: none;').'"><ul>';
   $result = mysql_do_query("SELECT *
 		                      FROM `cms_pages` 
 				             WHERE `page_category` = '".mysql_real_escape_string($cat['cat_id'])."'");
+  $c = $cat['flat_path']."<br/>".$cat['path']."<br/><ul>";
   while ($row = mysql_fetch_assoc($result))
   {
-  	$js .= "makeDraggable('pageli".$row['page_id']."');";
   	$c .= '<li id="pageli'.$row['page_id'].'"><div style="float: left; width: 150px">'.
   			'[<a href="'.$cat['path'].'/'.$row['page_key'].'.move">Move</a>] '.
   			'[<a href="'.$cat['path'].'/'.$row['page_key'].'.pageconfig">Settings</a>] </div>'.
@@ -26,17 +22,30 @@ function makeCatDiv($cat, $root = false)
   			$row['page_title'].''.
   			'</li>';
   }
-  foreach ($cat['children'] as $k => $v)
-  {
-   	$js .= "makeDraggable('catli".$v['cat_id']."');";
-  	$c .= '<li id="catli'.$v['cat_id'].'">
-  		<div style="float: left; width: 150px">[<a id="a'.$v['cat_id'].'" href="javascript:toggleVis('.$v['cat_id'].');">Expand</a>]</div>
-  		<div style="float: left; width: 200px"> -- &nbsp; '.$v['cat_key']."</div> -- &nbsp; ".$v['cat_title'].
-  		'<br/>'.makeCatDiv($v).'</li>';
-  }
-  $c .= "</ul></div>";
+  $c .= "</ul>";
   return $c;
 }
+
+function makeCatListDiv($cat)
+{
+  $c = '<div id="cat'.$cat['cat_parent'].'" style="padding: 3px 3px 3px 15px;">';
+  $c .= '<span style="font-family: monospace; font-size: 0.7em; font-weight: bold;">';
+  if ($cat['children'])
+  	$c .= '<a style="text-decoration: none; border: 1px solid #999; padding: 0px 3px 0px 3px;" id="a'.$cat['cat_id'].'" href="javascript:toggleVis('.$cat['cat_id'].');">-</a> </span>';
+  else
+  	$c .= '<span style="padding: 0px 3px 0px 3px;">&gt;</span> </span>';
+  $c .= '<a href="javascript:showCat('.$cat['cat_id'].');">'.$cat['cat_title'].'</a>';
+  if ($cat['children'])
+  {
+  	foreach ($cat['children'] as $k => $v)
+  		$c .= makeCatListDiv($v);
+  }
+  $c .= "</div>";
+  return $c;
+}
+
+if (isset($vfile[2]))
+  die(makePagesDiv($tree['ids'][$vfile[2]]));
 
 $content .= '<script type="text/javascript">
 function toggleVis(num)
@@ -48,12 +57,12 @@ function toggleVis(num)
      if (e.style.display == "none")
      {
        e.style.display = "block";
-       a.innerHTML = "Hide";
+       a.innerHTML = "-";
      }
      else
      {
        e.style.display = "none";
-       a.innerHTML = "Expand";
+       a.innerHTML = "+";
      }
    }
 }
@@ -127,12 +136,35 @@ function makeDraggable(id){
 	}
 }
 
+function handler() {
+ if(this.readyState == 4 && this.status == 200) {
+  // so far so good
+	var e = document.getElementById("pagesDiv");
+
+	if (e != null)
+		e.innerHTML = this.responseText;
+
+ } else if (this.readyState == 4 && this.status != 200) {
+  // fetched the wrong page or network error...
+ }
+}
+
+function showCat(id)
+{
+  var client = new XMLHttpRequest();
+  client.onreadystatechange = handler;
+  client.open("GET", "'.$vfile[0].'.structure."+id);
+  client.setRequestHeader("Connection", "close");
+  client.send("");
+}
+
 </script>';
 
-$content .= "Home<br/>".makeCatDiv($tree['tree'], true);
+$content .= '<div style="float: left; width: 200px; border: 1px solid #999;">'.makeCatListDiv($tree['tree']).'</div>';
+$content .= '<div id="pagesDiv" style="margin: 0px 0px 0px 210px; border: 1px solid #999; padding: 20px;">'.makePagesDiv($tree['tree']).'</div>';
 
 //$content .= '<script type="text/javascript">'.$js.'</script>';
 
-//$content .= "<br/><br/><pre>".print_r($tree['tree'],true)."</pre>";
+$content .= "<br/><br/><pre>".print_r($tree['tree'],true)."</pre>";
 
 ?>
