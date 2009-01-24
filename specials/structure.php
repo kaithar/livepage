@@ -26,9 +26,9 @@ function makePagesDiv($cat)
   return $c;
 }
 
-function makeCatListDiv($cat)
+function makeCatListDiv($cat, $root = false)
 {
-  $c = '<div id="cat'.$cat['cat_parent'].'" style="padding: 3px 3px 0px 15px; border-left: 1px solid #999;">';
+  $c = '<div id="cat'.$cat['cat_parent'].'" style="padding: 3px 3px 0px 15px; '.($root?'':'border-left: 1px solid #999;').'">';
   $c .= '<span style="font-family: monospace; font-size: 0.7em; font-weight: bold;">';
   if ($cat['children'])
   	$c .= '<a style="text-decoration: none; border: 1px solid #999; padding: 0px 3px 0px 3px;" id="a'.$cat['cat_id'].'" href="javascript:toggleVis('.$cat['cat_id'].');">-</a> </span>';
@@ -160,7 +160,7 @@ function showCat(id)
 
 </script>';
 
-$content .= '<div style="float: left; width: 200px; border: 1px solid #999;">'.makeCatListDiv($tree['tree']).'</div>';
+$content .= '<div style="float: left; width: 190px; border: 1px solid #999; padding: 5px;">'.makeCatListDiv($tree['tree'], true).'</div>';
 $content .= '<div id="pagesDiv" style="margin: 0px 0px 0px 210px; border: 1px solid #999; padding: 20px;">'.makePagesDiv($tree['tree']).'</div>';
 
 //$content .= '<script type="text/javascript">'.$js.'</script>';
