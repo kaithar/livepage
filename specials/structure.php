@@ -15,8 +15,8 @@ function makePagesDiv($cat)
   while ($row = mysql_fetch_assoc($result))
   {
   	$c .= '<li id="pageli'.$row['page_id'].'"><div style="float: left; width: 150px">'.
-  			'[<a href="'.$cat['path'].'/'.$row['page_key'].'.move">Move</a>] '.
-  			'[<a href="'.$cat['path'].'/'.$row['page_key'].'.pageconfig">Settings</a>] </div>'.
+  			'[<a href="'.$cat['path'].$row['page_key'].'.move">Move</a>] '.
+  			'[<a href="'.$cat['path'].$row['page_key'].'.pageconfig">Settings</a>] </div>'.
   			'<div style="float: left; width: 200px">
   			-- &nbsp; <a href="'.$cat['path'].'/'.$row['page_key'].'">'.$row['page_key']."</a></div> -- &nbsp; ".
   			$row['page_title'].''.
