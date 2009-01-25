@@ -62,6 +62,9 @@ if (preg_match("|^/lp-admin|", $requested))
 	$vfile = explode(".", $vpath[1]);
 	// Cat 1 is / ... we need to say here that it's visible so that the menu is built.
 	$visible_categories = Array(1=>true);
+	// Other variables we need to fake...
+	$page = Array();
+	$path = Array();
 	require_once("specials/lp-admin.php");
 	$showpage = 0;
 }
