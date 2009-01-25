@@ -1,3 +1,30 @@
+function structureHandler() {
+ if(this.readyState == 4 && this.status == 200) {
+  // so far so good
+	var e = document.getElementById("adminbody");
+
+	if (e != null)
+		e.innerHTML = this.responseText;
+
+ } else if (this.readyState == 4 && this.status != 200) {
+  // fetched the wrong page or network error...
+ }
+}
+
+function viewStructure ()
+{
+  var e = document.getElementById("adminbody");
+  e.innerHtml = "<i>Loading...</i>";
+  var client = new XMLHttpRequest();
+  client.onreadystatechange = structureHandler;
+  client.open("GET", "/lp-admin.structure");
+  client.setRequestHeader("Connection", "close");
+  client.send("");
+}
+
+
+
+
 function toggleVis(num)
 {
    var e = document.getElementById("cat"+num);
