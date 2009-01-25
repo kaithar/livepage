@@ -14,6 +14,14 @@ $requested = $_SERVER['REQUEST_URI'];
 // For the purpose of this, see templates/simplicity/header.php and specials/config.php
 $admining = 0;
 
+$content = "";
+
+/* showpage is there to allow the specials to override page display.
+ * Set to 1 it renders, set it to 0 to not show it.
+ */
+$showpage = 1;
+
+
 /*****************************************************************************************************
  * Bypass the normal code f the request is for /files/
  * Such requests are simple rewrites.
@@ -44,6 +52,21 @@ if (mysql_num_rows($ti) != 1)
 unset($ti);
 
 /*****************************************************************************************************
+ * This uses a couple of hacks to make sure the rest of the code doesn't break.
+ * Yes, it's a bit ugly, but it works :p
+ */
+
+if (preg_match("|^/lp-admin|", $requested))
+{
+	$vpath = explode("/",$requested);
+	$vfile = explode(".", $vpath[1]);
+	// Cat 1 is / ... we need to say here that it's visible so that the menu is built.
+	$visible_categories = Array(1=>true);
+	require_once("specials/lp-admin.php");
+	$showpage = 0;
+}
+
+/*****************************************************************************************************
  * This code is designed to match "/foo/" and "/foo/.handler".
  * It inserts index, converting the url to "/foo/index" and "/foo/index.handler" respectively.
  */
@@ -60,168 +83,165 @@ if (preg_match("|^((?:.*/)+)(\.[^/]*)?$|U", $requested, $matches))
  * Process the request, building an array of it's components.
  */
 
-$vpath = explode("/",$requested);
-$path = Array();
-$parent = 0;
-$parent_path = "";
-
-$visible_categories = Array();
-
-while (count($vpath) > 1)
+if ($showpage)
 {
-  $vfile = explode(".", array_shift(&$vpath)); // Explode the next path component
-  
-  // Try to get said path component (note, the root category has a blank key and 0 parent)
-  $mycat = mysql_do_query("SELECT *
-			                       FROM `cms_categories` 
-                            WHERE `cat_key`='".mysql_real_escape_string($vfile[0])."' 
-                              AND `cat_parent` = '".mysql_real_escape_string($parent)."'
-                            LIMIT 1");
-
-  if (mysql_num_rows($mycat) != 1)
-  {
-		// Category doesn't exist ... fake it.
-		$cat = Array();
-		$cat['found'] = false;
-		$cat['cat_key'] = $vfile[0];
-		$cat['cat_title'] = $vfile[0];
-		$cat['cat_id'] = -1;
-		$cat['parent'] = $parent;
-  }
-	else
+	$vpath = explode("/",$requested);
+	$path = Array();
+	$parent = 0;
+	$parent_path = "";
+	
+	$visible_categories = Array();
+	
+	while (count($vpath) > 1)
 	{
-  	// We have a cat, so it needs to be properly treated... with cat nip :P
-  	$cat = mysql_fetch_assoc($mycat);
-		$cat['found'] = true;
-    $visible_categories[$cat['cat_id']] = true;
+	  $vfile = explode(".", array_shift(&$vpath)); // Explode the next path component
+	  
+	  // Try to get said path component (note, the root category has a blank key and 0 parent)
+	  $mycat = mysql_do_query("SELECT *
+				                       FROM `cms_categories` 
+	                            WHERE `cat_key`='".mysql_real_escape_string($vfile[0])."' 
+	                              AND `cat_parent` = '".mysql_real_escape_string($parent)."'
+	                            LIMIT 1");
+	
+	  if (mysql_num_rows($mycat) != 1)
+	  {
+			// Category doesn't exist ... fake it.
+			$cat = Array();
+			$cat['found'] = false;
+			$cat['cat_key'] = $vfile[0];
+			$cat['cat_title'] = $vfile[0];
+			$cat['cat_id'] = -1;
+			$cat['parent'] = $parent;
+	  }
+		else
+		{
+	  	// We have a cat, so it needs to be properly treated... with cat nip :P
+	  	$cat = mysql_fetch_assoc($mycat);
+			$cat['found'] = true;
+	    $visible_categories[$cat['cat_id']] = true;
+		}
+	
+		$cat['parent_path'] = $parent_path ? $parent_path : "/";
+	  $path[] = $cat;
+	  $parent_path .= $cat['cat_key']."/";
+		$cat['path'] = $parent_path;
+	
+	  // And on to the next component we go.
+	  $parent = $cat['cat_id']; 
 	}
-
-	$cat['parent_path'] = $parent_path ? $parent_path : "/";
-  $path[] = $cat;
-  $parent_path .= $cat['cat_key']."/";
-	$cat['path'] = $parent_path;
-
-  // And on to the next component we go.
-  $parent = $cat['cat_id']; 
 }
-
 /*****************************************************************************************************
  * Process the page request
  */
 
-// If we're rendering a normal page...
-$vfile = explode(".",$vpath[0]);
-
-$mypage = mysql_do_query("SELECT *
-		                        FROM `cms_pages` 
-				                   WHERE `page_key`='".mysql_real_escape_string($vfile[0])."' 
-				                     AND `page_category` = '".mysql_real_escape_string($parent)."'
-				                   LIMIT 1");
-
-if (mysql_num_rows($mypage) != 1)
+if ($showpage)
 {
-	// Fake it baby!
-  $page = Array();
-	$page['found'] = false;
-	$page['page_key'] = $vfile[0];
-	$page['page_title'] = $vfile[0];
-	$page['page_id'] = -1;
-	$page['parent'] = $parent;
-	$page['page_include'] = "pages/404.php";
-  $page['template_data'] = "";
-}
-else
-{
-  $page = mysql_fetch_assoc($mypage);
-	$page['found'] = true;
-  $pti = mysql_do_query("SELECT *
-                           FROM `cms_template_page_config`
-                          WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'
-                            AND `template_page_id` = '".mysql_real_escape_string($page['page_id'])."'
-                          LIMIT 1");
-  if (mysql_num_rows($pti) != 1)
-  {
-    $page['template_data'] = "";
-  }
-  else
-  {
-    $pti = mysql_fetch_assoc($pti);
-    $page['template_data'] = $pti['template_data'];
-  }
-  unset($pti);
-}
+	// If we're rendering a normal page...
+	$vfile = explode(".",$vpath[0]);
+	
+	$mypage = mysql_do_query("SELECT *
+			                        FROM `cms_pages` 
+					                   WHERE `page_key`='".mysql_real_escape_string($vfile[0])."' 
+					                     AND `page_category` = '".mysql_real_escape_string($parent)."'
+					                   LIMIT 1");
+	
+	if (mysql_num_rows($mypage) != 1)
+	{
+		// Fake it baby!
+	  $page = Array();
+		$page['found'] = false;
+		$page['page_key'] = $vfile[0];
+		$page['page_title'] = $vfile[0];
+		$page['page_id'] = -1;
+		$page['parent'] = $parent;
+		$page['page_include'] = "pages/404.php";
+	  $page['template_data'] = "";
+	}
+	else
+	{
+	  $page = mysql_fetch_assoc($mypage);
+		$page['found'] = true;
+	  $pti = mysql_do_query("SELECT *
+	                           FROM `cms_template_page_config`
+	                          WHERE `template_name` = '".mysql_real_escape_string($site_config['template'])."'
+	                            AND `template_page_id` = '".mysql_real_escape_string($page['page_id'])."'
+	                          LIMIT 1");
+	  if (mysql_num_rows($pti) != 1)
+	  {
+	    $page['template_data'] = "";
+	  }
+	  else
+	  {
+	    $pti = mysql_fetch_assoc($pti);
+	    $page['template_data'] = $pti['template_data'];
+	  }
+	  unset($pti);
+	}
+	$page['parent_path'] = $parent_path ? $parent_path : "/";
+	$page['path'] = $parent_path.$page['page_key'];
+	$page['params'] = array_slice($vfile,1);
 
-$page['parent_path'] = $parent_path ? $parent_path : "/";
-$page['path'] = $parent_path.$page['page_key'];
-$page['params'] = array_slice($vfile,1);
-
-/*****************************************************************************************************
- * Process specials
- */
-
-$content = "";
-
-/* showpage is there to allow the specials to override page display.
- * Set to 1 it renders, set it to 0 to not show it.
- */
-$showpage = 1;
-
-if ($page['params'])
-{
-  // If you can't edit the page, you can't use most of the handlers.
-  if ($user['editcontent'] == 1)
-  {
-    // Unless the special otherwise instructs it, the page won't display
-    $showpage = 0;
-    switch ($page['params'][0])
-    {
-      case "config":
-        include("specials/config.php");
-        break;
-      case "sidebar":
-        include("specials/sidebar.php");
-        break;
-      case "create":
-        include("specials/create.php");
-        break;
-      case "createsection":
-        include("specials/createsection.php");
-        break;
-      case "swap":
-        include("specials/swap.php");
-        break;
-      case "edit":
-        include("specials/edit.php");
-        break;
-      case "del":
-        include("specials/del.php");
-        break;
-      case "delpage":
-        include("specials/delpage.php");
-        break;
-      case "pageconfig":
-        include("specials/pageconfig.php");
-        break;
-      case "move":
-        include("specials/move.php");
-        break;
-      case "structure":
-        include("specials/structure.php");
-        break;
-      default:
-        // Okie, so it isn't an admin header... but we're not giving up yet...
-        $showpage = 1;
-    }
-  }
-  /* One last possibility before we assume it's .html or something...
-   * Note: These don't want the templating used.
-   */
-  switch ($page['params'][0])
-  {
-    case "css":
-      include("specials/style.php");
-      die();
-  }
+	/*****************************************************************************************************
+	 * Process specials
+	 */
+	
+	if ($page['params'])
+	{
+	  // If you can't edit the page, you can't use most of the handlers.
+	  if ($user['editcontent'] == 1)
+	  {
+	    // Unless the special otherwise instructs it, the page won't display
+	    $showpage = 0;
+	    switch ($page['params'][0])
+	    {
+	      case "config":
+	        include("specials/config.php");
+	        break;
+	      case "sidebar":
+	        include("specials/sidebar.php");
+	        break;
+	      case "create":
+	        include("specials/create.php");
+	        break;
+	      case "createsection":
+	        include("specials/createsection.php");
+	        break;
+	      case "swap":
+	        include("specials/swap.php");
+	        break;
+	      case "edit":
+	        include("specials/edit.php");
+	        break;
+	      case "del":
+	        include("specials/del.php");
+	        break;
+	      case "delpage":
+	        include("specials/delpage.php");
+	        break;
+	      case "pageconfig":
+	        include("specials/pageconfig.php");
+	        break;
+	      case "move":
+	        include("specials/move.php");
+	        break;
+	      case "lp-admin":
+	        include("specials/lp-admin.php");
+	        break;
+	      default:
+	        // Okie, so it isn't an admin header... but we're not giving up yet...
+	        $showpage = 1;
+	    }
+	  }
+	  /* One last possibility before we assume it's .html or something...
+	   * Note: These don't want the templating used.
+	   */
+	  switch ($page['params'][0])
+	  {
+	    case "css":
+	      include("specials/style.php");
+	      die();
+	  }
+	}
 }
 
 /*****************************************************************************************************

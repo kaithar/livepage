@@ -132,7 +132,7 @@ while ($item = mysql_fetch_assoc($mylinks))
           <center><b>Admin</b></center>
           <div class="links">
 					  <a href="<?php echo $page['path'];?>.config">Site Config</a>
-					  <a href="<?php echo $page['path'];?>.structure">Site Structure</a>
+					  <a href="/lp-admin">Site Structure</a>
 						<a href="<?php echo $page['path'];?>.sidebar">Edit Sidebar</a>
 			    </div>
 					<?php if ($admining == 0) { ?>
@@ -155,6 +155,8 @@ while ($item = mysql_fetch_assoc($mylinks))
     </td>
     <td id="td_content">
      <?php
+      if ($path)
+      {
        $c = "";
        foreach ($path as $v)
        {
@@ -162,8 +164,6 @@ while ($item = mysql_fetch_assoc($mylinks))
          echo " &raquo; <a href=\"$c\">{$v["cat_title"]}</a>";
        }
 			 if ($page["page_key"] != "index")
-			 	echo " &raquo; <a href=\"$c{$page["page_key"]}\">{$page["page_title"]}</a>";
+			 	echo " &raquo; <a href=\"$c{$page["page_key"]}\">{$page["page_title"]}</a><br/><br/>";
+      }
      ?>
-     <br/>
-     <br/>
-
