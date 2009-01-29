@@ -1,16 +1,3 @@
-function structureHandler() {
- if(this.readyState == 4 && this.status == 200) {
-  // so far so good
-	var e = document.getElementById("adminbody");
-
-	if (e != null)
-		e.innerHTML = this.responseText;
-
- } else if (this.readyState == 4 && this.status != 200) {
-  // fetched the wrong page or network error...
- }
-}
-
 function viewPage (name)
 {
   $("#adminbody").html("<i>Loading...</i>");
@@ -44,18 +31,17 @@ function postForm (name)
 
 function toggleVis(num)
 {
-   var e = document.getElementById("cat"+num);
    var a = document.getElementById("a"+num);
-   if (e != null)
+   if (a != null)
    {
-     if (e.style.display == "none")
+     if (a.innerHTML == "+")
      {
-       e.style.display = "block";
+       $('#cat'+num).slideDown(200);
        a.innerHTML = "-";
      }
      else
      {
-       e.style.display = "none";
+       $('#cat'+num).slideUp(200);    	 
        a.innerHTML = "+";
      }
    }
@@ -71,93 +57,114 @@ function setHTML(id,str)
 	}
 }
 
-
-document.onmousemove = mouseMove;
-document.onmouseup   = mouseUp;
-
-var dragObject  = null;
-var mouseOffset = null;
-
-function mouseCoords(ev){
-	if(ev.pageX || ev.pageY){
-		return {x:ev.pageX, y:ev.pageY};
-	}
-	return {
-		x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
-		y:ev.clientY + document.body.scrollTop  - document.body.clientTop
-	};
-}
-
-function getPosition(e){
-	var left = 0;
-	var top  = 0;
-
-	while (e.offsetParent){
-		left += e.offsetLeft;
-		top  += e.offsetTop;
-		e     = e.offsetParent;
-	}
-
-	left += e.offsetLeft;
-	top  += e.offsetTop;
-
-	return {x:left, y:top};
-}
-
-
-function getMouseOffset(target, ev){
-	ev = ev || window.event;
-
-	var docPos    = getPosition(target);
-	var mousePos  = mouseCoords(ev);
-	return {x:mousePos.x - docPos.x, y:mousePos.y - docPos.y};
-}
-
-function mouseMove(ev){
-	ev           = ev || window.event;
-	var mousePos = mouseCoords(ev);
-
-	if(dragObject){
-		dragObject.style.position = 'absolute';
-		dragObject.style.top      = mousePos.y - mouseOffset.y + "px";
-		dragObject.style.left     = mousePos.x - mouseOffset.x + "px";
-
-		return false;
-	}
-}
-
-function mouseUp(){
-	dragObject = null;
-}
-
-function makeDraggable(id){
-	var item = document.getElementById(id);
-	if(!item) return;
-	item.onmousedown = function(ev){
-		dragObject  = this;
-		mouseOffset = getMouseOffset(this, ev);
-		return false;
-	}
-}
-
-function handler() {
- if(this.readyState == 4 && this.status == 200) {
-  // so far so good
-	var e = document.getElementById("pagesDiv");
-
-	if (e != null)
-		e.innerHTML = this.responseText;
-
- } else if (this.readyState == 4 && this.status != 200) {
-  // fetched the wrong page or network error...
- }
-}
-
 function showCat(id)
 {
-  var client = new XMLHttpRequest();
-  client.onreadystatechange = handler;
-  client.open("GET", "/lp-admin.structure."+id);
-  client.setRequestHeader("Connection", "close");
-  client.send("");
+  $.ajax({
+    type: "GET",
+    url: "/lp-admin.structure."+id,
+    cache: false,
+    dataType: "html",
+    success: function (data)
+    {
+	  $("#pagesDiv").html(data)
+    }
+  });
 }
+
+function toggleDetails(id) {	$('#'+id+" div").slideToggle(100); }
+function showAllDetails() {	$('#pagesDiv li div').slideDown(200); }
+function hideAllDetails() {	$('#pagesDiv li div').slideUp(200); }
+function showNewFolder() {	$('#newFolder').slideToggle(100); }
+function showNewPage() {	$('#newPage').slideToggle(100); }
+
+function showAllCats() {	$('#catsDiv div[id*=cat]').slideDown(200); $('#catsDiv a[id*=a]').html("-"); }
+function hideAllCats() {	$('#catsDiv div[id*=cat]').slideUp(200); $('#catsDiv a[id*=a]').html("+"); }
+
+
+function reloadCats ()
+{
+  $.ajax({
+	    type: "GET",
+	    url: "/lp-admin.structure.catList",
+	    cache: false,
+	    dataType: "html",
+	    success: function (data)
+	    {
+	  		var newCats = $(data);
+	  		$("div#catsDiv div:hidden").each(function ()
+	  				{
+	  					newCats.find('div#'+this.id).hide();
+	  					newCats.find('a#'+this.id.replace(/cat/,"a")).html("+");
+	  				} );
+	  		$("div#catsDiv").html(newCats);
+	    }
+  });
+}
+
+//document.onmousemove = mouseMove;
+//document.onmouseup   = mouseUp;
+//
+//var dragObject  = null;
+//var mouseOffset = null;
+//
+//function mouseCoords(ev){
+//	if(ev.pageX || ev.pageY){
+//		return {x:ev.pageX, y:ev.pageY};
+//	}
+//	return {
+//		x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+//		y:ev.clientY + document.body.scrollTop  - document.body.clientTop
+//	};
+//}
+//
+//function getPosition(e){
+//	var left = 0;
+//	var top  = 0;
+//
+//	while (e.offsetParent){
+//		left += e.offsetLeft;
+//		top  += e.offsetTop;
+//		e     = e.offsetParent;
+//	}
+//
+//	left += e.offsetLeft;
+//	top  += e.offsetTop;
+//
+//	return {x:left, y:top};
+//}
+//
+//
+//function getMouseOffset(target, ev){
+//	ev = ev || window.event;
+//
+//	var docPos    = getPosition(target);
+//	var mousePos  = mouseCoords(ev);
+//	return {x:mousePos.x - docPos.x, y:mousePos.y - docPos.y};
+//}
+//
+//function mouseMove(ev){
+//	ev           = ev || window.event;
+//	var mousePos = mouseCoords(ev);
+//
+//	if(dragObject){
+//		dragObject.style.position = 'absolute';
+//		dragObject.style.top      = mousePos.y - mouseOffset.y + "px";
+//		dragObject.style.left     = mousePos.x - mouseOffset.x + "px";
+//
+//		return false;
+//	}
+//}
+//
+//function mouseUp(){
+//	dragObject = null;
+//}
+//
+//function makeDraggable(id){
+//	var item = document.getElementById(id);
+//	if(!item) return;
+//	item.onmousedown = function(ev){
+//		dragObject  = this;
+//		mouseOffset = getMouseOffset(this, ev);
+//		return false;
+//	}
+//}
