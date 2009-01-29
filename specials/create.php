@@ -1,5 +1,5 @@
 <?php
-
+die("Depreciated page!");
 if ($page['found'] == false)
 {
   $parent_id = 0;

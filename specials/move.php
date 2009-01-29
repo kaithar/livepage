@@ -26,7 +26,13 @@ if (isset($_POST['Submit']) && $_POST['Submit'] == "Submit" && isset($tree['ids'
     }
     else
     {
-      mysql_do_query("UPDATE `cms_pages` SET `page_key`='$key', `page_category`='$cat'
+		$results = mysql_do_query("SELECT * FROM `cms_categories`
+			WHERE `cat_key` = '".$key."'
+			  AND `cat_parent` = '".$cat."'");
+		if (mysql_num_rows($results) != 0)
+			die("alert('Sub Folder exists');");
+	
+		mysql_do_query("UPDATE `cms_pages` SET `page_key`='$key', `page_category`='$cat'
                        WHERE `page_id`='".mysql_real_escape_string($page_id)."'");
       header("location: ".$tree['ids'][$cat]['path']."/".$key);
       die();
