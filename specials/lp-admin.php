@@ -1,6 +1,10 @@
 <?php 
 
 $admining = 1;
+if ($user['editcontent'] != 1)
+{
+	die("Not allowed");
+}
 
 $content .= '<script type="text/javascript" src="/js/jquery-1.3.1.min.js"></script>';
 $content .= '<script type="text/javascript" src="/js/admin.js"></script>';
