@@ -29,9 +29,9 @@ function makePagesDiv($cat)
   {
   	$c .= '<li id="pageli'.$row['page_id'].'"><a class="pagekey" href="javascript:toggleDetails(\'pageli'.$row['page_id'].'\')">'.$row['page_key'].'</a>'.
   			'<div style="display: none; padding: 0px 0px 0px 50px;">'.
-  				'[<a href="'.$cat['path'].$row['page_key'].'.move">Move</a>] '.
-  				'[<a href="'.$cat['path'].$row['page_key'].'.pageconfig">Settings</a>] '.
-  				'[<a href="'.$cat['path'].''.$row['page_key'].'">Goto</a>] &nbsp; -- &nbsp; Title: '.
+  				'[<a href="'.rtrim($cat['path'],"/").'/'.$row['page_key'].'.move">Move</a>] '.
+  				'[<a href="'.rtrim($cat['path'],"/").'/'.$row['page_key'].'.pageconfig">Settings</a>] '.
+  				'[<a href="'.rtrim($cat['path'],"/").'/'.$row['page_key'].'">Goto</a>] &nbsp; -- &nbsp; Title: '.
   			$row['page_title'].'</div>'.
   			'</li>';
   }
