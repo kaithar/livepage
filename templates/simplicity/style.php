@@ -136,3 +136,24 @@ div.section_noborder div.content
 /*-----------------*/
 
 
+<?php
+$settings = Array (
+  "title_bg" => "",
+  "menu_bg"=> ""
+);
+
+if ($site_config['template_data'] != "")
+{
+  $s = explode(";", $site_config['template_data']);
+  foreach ($s as $ss)
+  {
+    $ss = explode(":",$ss);
+    $settings[$ss[0]] = $ss[1];
+  }
+}
+
+if ($settings['title_bg'] != "")
+  echo "div.section div.title { background: ".$settings['title_bg']."; }\n";
+if ($settings['menu_bg'] != "")
+  echo "div.links a:hover { background: ".$settings['menu_bg']."; }\n";
+?>

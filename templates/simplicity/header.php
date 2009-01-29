@@ -5,16 +5,6 @@ $settings = Array (
   "menu_bg"=> ""
 );
 
-if ($site_config['template_data'] != "")
-{
-  $s = explode(";", $site_config['template_data']);
-  foreach ($s as $ss)
-  {
-    $ss = explode(":",$ss);
-    $settings[$ss[0]] = $ss[1];
-  }
-}
-
 if ($page['template_data'] != "")
 {
   $s = explode(";", $page['template_data']);
@@ -131,8 +121,7 @@ while ($item = mysql_fetch_assoc($mylinks))
          <div class="linkbox">
           <center><b>Admin</b></center>
           <div class="links">
-					  <a href="<?php echo $page['path'];?>.config">Site Config</a>
-					  <a href="/lp-admin">Site Structure</a>
+			<a href="/lp-admin">Site Admin</a>
 						<a href="<?php echo $page['path'];?>.sidebar">Edit Sidebar</a>
 			    </div>
 					<?php if ($admining == 0) { ?>

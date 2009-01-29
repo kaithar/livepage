@@ -11,19 +11,36 @@ function structureHandler() {
  }
 }
 
-function viewStructure ()
+function viewPage (name)
 {
-  var e = document.getElementById("adminbody");
-  e.innerHtml = "<i>Loading...</i>";
-  var client = new XMLHttpRequest();
-  client.onreadystatechange = structureHandler;
-  client.open("GET", "/lp-admin.structure");
-  client.setRequestHeader("Connection", "close");
-  client.send("");
+  $("#adminbody").html("<i>Loading...</i>");
+
+  $.ajax({
+    type: "GET",
+    url: "/lp-admin."+name,
+    cache: false,
+    dataType: "html",
+    success: function (data)
+    {
+	  $("#adminbody").html(data)
+    }
+  });
 }
 
+var dataString = '';
+function postForm (name)
+{
+	dataString = 'submit=Submit';
+	$("#"+name+ " :text").each(function (i) { dataString = dataString + "&" + this.name + "=" + escape(this.value); } );
+	  $.ajax({
+	    type: "POST",
+	    url: $("#"+name).attr("action"),
+	    data: dataString,
+	    dataType: "script"
+	  });
+	  return false;
 
-
+}
 
 function toggleVis(num)
 {
@@ -42,6 +59,16 @@ function toggleVis(num)
        a.innerHTML = "+";
      }
    }
+}
+
+// Helpers...
+function setHTML(id,str)
+{
+	var e = document.getElementById(id);
+	if (e != null)
+	{
+		e.innerHTML = str;
+	}
 }
 
 

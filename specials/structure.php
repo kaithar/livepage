@@ -45,8 +45,9 @@ function makeCatListDiv($cat, $root = false)
 if (isset($vfile[2]))
   die(makePagesDiv($tree['ids'][$vfile[2]]));
 
-$content .= '<div style="float: left; width: 190px; border: 1px solid #999; padding: 5px;">'.makeCatListDiv($tree['tree'], true).'</div>';
-$content .= '<div id="pagesDiv" style="margin: 0px 0px 0px 210px; border: 1px solid #999; padding: 20px;">'.makePagesDiv($tree['tree']).'</div>';
+
+$content .= section("Site Structure", '<div style="float: left; width: 190px; border: 1px solid #999; padding: 5px;">'.makeCatListDiv($tree['tree'], true).'</div>'.
+	'<div id="pagesDiv" style="margin: 0px 0px 0px 210px; border: 1px solid #999; padding: 20px;">'.makePagesDiv($tree['tree']).'</div>');
 
 //$content .= '<script type="text/javascript">'.$js.'</script>';
 

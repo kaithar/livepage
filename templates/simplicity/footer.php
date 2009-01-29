@@ -2,7 +2,7 @@
    </tr>
    <tr>
     <td class="txt_common footer">
-     <?php if ($site_config['footer']) echo $site_config['footer']; else echo "It's .... ALIVE!"; ?>  
+     <div id="footerDiv"><?php if ($site_config['footer']) echo $site_config['footer']; else echo "It's .... ALIVE!"; ?></div>  
     </td>
    </tr>
    <tr>

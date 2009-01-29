@@ -1,5 +1,5 @@
 <?php
-
+header('Cache-control: private, must-revalidate, max-age=0'); header('Pragma: no-cache');
 /*****************************************************************************************************
  * Set 'em up, boys.
  */
@@ -9,7 +9,8 @@ require_once ("includes/templating.php");
 
 
 // $_SERVER['REQUEST_URI'] is like "/foo/bar"
-$requested = $_SERVER['REQUEST_URI'];
+$requested = explode("?",$_SERVER['REQUEST_URI']);
+$requested = $requested[0];
 
 // For the purpose of this, see templates/simplicity/header.php and specials/config.php
 $admining = 0;
