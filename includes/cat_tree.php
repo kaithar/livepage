@@ -6,10 +6,10 @@ function recursive_tree_path(&$flat, &$node, $flat_path, $path)
 {
 	$flat_path .= $node['cat_title'] . " &raquo; ";
 	$path .= $node['cat_key'];
+	if ($path != "/") $path .= "/";
 	$node['flat_path'] = $flat_path;
 	$node['path'] = $path;
 	$flat[] = &$node;
-	if ($path != "/") $path .= "/";
 	foreach ($node['children'] as $k => $v)
 		recursive_tree_path($flat, $node['children'][$k], $flat_path, $path);
 }

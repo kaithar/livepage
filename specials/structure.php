@@ -2,24 +2,34 @@
 
 require_once("includes/cat_tree.php");
 
+$tree = build_cat_tree();
+
 function makePagesDiv($cat)
 {
+	global $tree;
+	$cts = "";
+	foreach ($tree['flat'] as $tcat)
+	{
+		$cts .= "<option value=\"{$tcat['cat_id']}\"".(($tcat['cat_id'] == $cat['cat_id'])?" selected=\"selected\"":"").">";
+		$cts .= $tcat['path']."</option>";
+	}
+
   $result = mysql_do_query("SELECT *
 		                      FROM `cms_pages` 
 				             WHERE `page_category` = '".mysql_real_escape_string($cat['cat_id'])."'");
-  $c = "[<a href=\"javascript:showAllDetails()\">Expand all</a>] ".
+  $c = "<div>[<a href=\"javascript:showAllDetails()\">Expand all</a>] ".
   		"[<a href=\"javascript:hideAllDetails()\">Collapse all</a>] ".
 		"[<a href=\"javascript:showNewFolder()\">New Subfolder</a>] ".
 		"[<a href=\"javascript:showNewPage()\">New Page</a>] ".
   		"<br/>".
   	'<div id="newFolder" style="display: none; padding: 10px;">'.
   		'<form action="/lp-admin.structure.newFolder.'.$cat['cat_id'].'" method="POST" id="newFolderForm">'.
-			"Create folder ".rtrim($cat['path'],'/')."/ <input type=\"text\" name=\"folder_name\" size=\"35\" value=\"\"/> ".
+			"Create folder ".$cat['path']." <input type=\"text\" name=\"folder_name\" size=\"35\" value=\"\"/> ".
 			"<input type=\"button\" name=\"submit\" value=\"Submit\" onClick=\"postForm('newFolderForm')\"/></form>".
 	'</div>'.
   	'<div id="newPage" style="display: none; padding: 10px;">'.
   		'<form action="/lp-admin.structure.newPage.'.$cat['cat_id'].'" method="POST" id="newPageForm">'.
-			"Create page ".rtrim($cat['path'],'/')."/ <input type=\"text\" name=\"page_name\" size=\"35\" value=\"\"/> ".
+			"Create page ".$cat['path']." <input type=\"text\" name=\"page_name\" size=\"35\" value=\"\"/> ".
 			"<input type=\"button\" name=\"submit\" value=\"Submit\" onClick=\"postForm('newPageForm')\"/></form>".
 	'</div>'.
 	"<br/>".
@@ -28,14 +38,20 @@ function makePagesDiv($cat)
   while ($row = mysql_fetch_assoc($result))
   {
   	$c .= '<li id="pageli'.$row['page_id'].'"><a class="pagekey" href="javascript:toggleDetails(\'pageli'.$row['page_id'].'\')">'.$row['page_key'].'</a>'.
-  			'<div style="display: none; padding: 0px 0px 0px 50px;">'.
-  				'[<a href="'.rtrim($cat['path'],"/").'/'.$row['page_key'].'.move">Move</a>] '.
-  				'[<a href="'.rtrim($cat['path'],"/").'/'.$row['page_key'].'.pageconfig">Settings</a>] '.
-  				'[<a href="'.rtrim($cat['path'],"/").'/'.$row['page_key'].'">Goto</a>] &nbsp; -- &nbsp; Title: '.
+  			'<div class="controls" style="display: none; padding: 0px 0px 0px 50px;">'.
+  				'[<a href="javascript:toggleMove(\'pageli'.$row['page_id'].'\')">Move</a>] '.
+  				'[<a href="'.$cat['path'].$row['page_key'].'.pageconfig">Settings</a>] '.
+  				'[<a href="'.$cat['path'].$row['page_key'].'">Goto</a>] &nbsp; -- &nbsp; Title: '.
   			$row['page_title'].'</div>'.
+  			'<div class="move" style="display: none; padding: 0px 0px 0px 50px;">'.
+				'<form action="/lp-admin.structure.move.'.$row['page_id'].'" method="POST" id="mvfrm'.$row['page_id'].'">'.
+				'Move to: <select name="category">'.$cts.'</select> '.
+				'<input type="text" name="location" size="35" value="'.$row['page_key'].'"> '.
+  				'<input type="button" name="submit" value="Submit" onClick="postForm(\'mvfrm'.$row['page_id'].'\')"/></form>'.
+  			'</div>'.
   			'</li>';
   }
-  $c .= "</ul>";
+  $c .= "</ul></div>";
   return $c;
 }
 
@@ -56,8 +72,6 @@ function makeCatListDiv($cat, $root = false)
   }
   return $c;
 }
-
-$tree = build_cat_tree();
 
 if (isset($vfile[2]))
 {
@@ -87,7 +101,7 @@ if (isset($vfile[2]))
                               SET `cat_parent` = '".mysql_real_escape_string($vfile[3])."',
                                   `cat_key` = '$key',
                                   `cat_title` = '$key'");
-			die('reloadCats();$("#newFolder").slideUp(100);');
+			die('reloadCats();reloadCat('.$vfile[3].');');
 		
 		case "newPage":
 			if (!isset($vfile[3]))
@@ -111,7 +125,40 @@ if (isset($vfile[2]))
                               `page_category` = '".mysql_real_escape_string($vfile[3])."',
                               `page_title` = 'Under Construction'");
 
-			die('showCat('.$vfile[3].');');
+			die('reloadCat('.$vfile[3].');');
+			
+		case "move":
+			if (!isset($tree['ids'][$_POST['category']]))
+				die('alert("Unknown category");');
+
+			$page_id = mysql_real_escape_string($vfile[3]);
+			
+			$key = mysql_real_escape_string(preg_replace("/\s+/","_",$_POST['location']));
+				
+			$cat = mysql_real_escape_string($_POST['category']);
+			  
+		  if (!preg_match("/^[a-zA-Z0-9_\!()\^]+$/", $key))
+		    die("alert(\"Please use only letters (a to z), numbers (0-9), '_', '!', '(', ')' and '^' in key names.<br/>".
+		    	"If you feel that this range is insufficent, please file a bug report.\")");
+
+   			$results = mysql_do_query("SELECT * FROM `cms_pages`
+				WHERE `page_key` = '".$key."'
+				  AND `page_category` = '".$cat."'");
+			if (mysql_num_rows($results) != 0)
+				die("alert('Page exists');");
+			$results = mysql_do_query("SELECT * FROM `cms_categories`
+				WHERE `cat_key` = '".$key."'
+				  AND `cat_parent` = '".$cat."'");
+			if (mysql_num_rows($results) != 0)
+				die("alert('Folder exists with that name');");
+		    
+			$results = mysql_do_query("SELECT * FROM `cms_pages` WHERE `page_id` = '".$page_id."'");
+			$target = mysql_fetch_assoc($results);
+
+			mysql_do_query("UPDATE `cms_pages` SET `page_key`='$key', `page_category`='$cat'
+		                       WHERE `page_id`='".$page_id."'");
+		    
+			die('reloadCat('.$target['page_category'].');');
 			
 		case "catList":
 			die(makeCatListDiv($tree['tree']));

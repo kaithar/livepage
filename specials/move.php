@@ -1,5 +1,5 @@
 <?php
-
+die("page depreciated");
 require_once('includes/cat_tree.php');
 
 $tree = build_cat_tree();

@@ -19,6 +19,9 @@ function postForm (name)
 {
 	dataString = 'submit=Submit';
 	$("#"+name+ " :text").each(function (i) { dataString = dataString + "&" + this.name + "=" + escape(this.value); } );
+	$("#"+name+ " select").each(function (i) {
+		dataString += "&" + this.name + "=" + $("#"+name+ " select[name="+ this.name+"] option:selected").attr("value");
+	});
 	  $.ajax({
 	    type: "POST",
 	    url: $("#"+name).attr("action"),
@@ -57,25 +60,13 @@ function setHTML(id,str)
 	}
 }
 
-function showCat(id)
-{
-  $.ajax({
-    type: "GET",
-    url: "/lp-admin.structure."+id,
-    cache: false,
-    dataType: "html",
-    success: function (data)
-    {
-	  $("#pagesDiv").html(data)
-    }
-  });
-}
-
-function toggleDetails(id) {	$('#'+id+" div").slideToggle(100); }
-function showAllDetails() {	$('#pagesDiv li div').slideDown(200); }
+function toggleDetails(id) {	$('#'+id+" div.controls").slideToggle(200); $('#'+id+" div.move").slideUp(200); }
+function toggleMove(id) { $('#'+id+" div.move").slideToggle(200); }
+function showAllDetails() {	$('#pagesDiv li div.controls').slideDown(200); }
 function hideAllDetails() {	$('#pagesDiv li div').slideUp(200); }
-function showNewFolder() {	$('#newFolder').slideToggle(100); }
-function showNewPage() {	$('#newPage').slideToggle(100); }
+
+function showNewFolder() {	$('#newFolder').slideToggle(200); }
+function showNewPage() {	$('#newPage').slideToggle(200); }
 
 function showAllCats() {	$('#catsDiv div[id*=cat]').slideDown(200); $('#catsDiv a[id*=a]').html("-"); }
 function hideAllCats() {	$('#catsDiv div[id*=cat]').slideUp(200); $('#catsDiv a[id*=a]').html("+"); }
@@ -99,6 +90,71 @@ function reloadCats ()
 	  		$("div#catsDiv").html(newCats);
 	    }
   });
+}
+
+function showCat(id)
+{
+  $.ajax({
+    type: "GET",
+    url: "/lp-admin.structure."+id,
+    cache: false,
+    dataType: "html",
+    success: function (data)
+    {
+	  $("#pagesDiv").html(data)
+    }
+  });
+}
+
+function reloadCat (id)
+{
+	  $.ajax({
+		    type: "GET",
+		    url: "/lp-admin.structure."+id,
+		    cache: false,
+		    dataType: "html",
+		    success: function (data)
+		    {
+	  			var newCats = $(data);
+	  			$("div#pagesDiv li div:visible").each(function ()
+	  				{
+	  					newCats.find('li#'+$(this).parent().attr('id')+' div.'+$(this).attr('class')).show();
+	  				});
+	  			$("div#pagesDiv li div form :text").each(function () {
+  					newCats
+  						.find(
+  								'li#' + $(this).parent().parent().parent().attr('id')
+  								+' div.' + $(this).parent().parent().attr('class')
+  								+' :text[name='+$(this).attr('name')+']'
+  						)
+  						.attr(
+  								'value',
+  								$(this).attr('value')
+  						);
+		  			});
+	  			
+	  			newCats.find("option").removeAttr('selected');
+	  			$("div#pagesDiv li div form select option:selected").each(function () {
+  					newCats
+  						.find(
+  								'li#' + $(this).parent().parent().parent().parent().attr('id')
+  								+' div.' + $(this).parent().parent().parent().attr('class')
+  								+' select[name='+$(this).parent().attr('name')+']'
+  								+' option[value='+$(this).attr('value')+']'
+  						)
+  						.attr(
+  								'selected',
+  								$(this).attr('selected')
+  						);
+		  			});
+	  			
+
+	  			
+	  			
+	  			$("div#pagesDiv").html(newCats);
+		    }
+	  });
+
 }
 
 //document.onmousemove = mouseMove;
