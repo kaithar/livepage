@@ -132,8 +132,6 @@ while ($item = mysql_fetch_assoc($mylinks))
 				      { ?>
                 <a href="<?php echo $page['path'];?>.createsection">New Section</a>
                 <a href="<?php echo $page['path'];?>.pageconfig">Page Settings</a>
-                <a href="<?php echo $page['path'];?>.move">Move</a>
-                <a href="<?php echo $page['path'];?>.delpage">Nuke Page</a>
 					    <?php } ?>
             </div>
 					<?php } ?>
