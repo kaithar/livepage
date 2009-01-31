@@ -18,10 +18,12 @@ var dataString = '';
 function postForm (name)
 {
 	dataString = 'submit=Submit';
-	$("#"+name+ " :text").each(function (i) { dataString = dataString + "&" + this.name + "=" + escape(this.value); } );
+	$("#"+name+ " input:text").each(function (i) { dataString = dataString + "&" + this.name + "=" + escape(this.value); } );
 	$("#"+name+ " select").each(function (i) {
 		dataString += "&" + this.name + "=" + $("#"+name+ " select[name="+ this.name+"] option:selected").attr("value");
 	});
+	$("#"+name+ " input:checkbox:checked").each(function (i) { dataString = dataString + "&" + this.name + "=" + escape(this.value); } );
+	
 	  $.ajax({
 	    type: "POST",
 	    url: $("#"+name).attr("action"),
@@ -62,6 +64,7 @@ function setHTML(id,str)
 
 function toggleDetails(id) {	$('#'+id+" div.controls").slideToggle(200); $('#'+id+" div.move").slideUp(200); }
 function toggleMove(id) { $('#'+id+" div.move").slideToggle(200); }
+function toggleNuke(id) { $('#'+id+" div.nuke").slideToggle(200); }
 function showAllDetails() {	$('#pagesDiv li div.controls').slideDown(200); }
 function hideAllDetails() {	$('#pagesDiv li div').slideUp(200); }
 

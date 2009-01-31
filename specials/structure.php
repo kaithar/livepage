@@ -39,15 +39,21 @@ function makePagesDiv($cat)
   {
   	$c .= '<li id="pageli'.$row['page_id'].'"><a class="pagekey" href="javascript:toggleDetails(\'pageli'.$row['page_id'].'\')">'.$row['page_key'].'</a>'.
   			'<div class="controls" style="display: none; padding: 0px 0px 0px 50px;">'.
+				'Title: '.$row['page_title'].'<br/>'.
+  				'[<a href="'.$cat['path'].$row['page_key'].'">Goto</a>] '.
   				'[<a href="javascript:toggleMove(\'pageli'.$row['page_id'].'\')">Move</a>] '.
-  				'[<a href="'.$cat['path'].$row['page_key'].'.pageconfig">Settings</a>] '.
-  				'[<a href="'.$cat['path'].$row['page_key'].'">Goto</a>] &nbsp; -- &nbsp; Title: '.
-  			$row['page_title'].'</div>'.
+  				'[<a href="javascript:toggleNuke(\'pageli'.$row['page_id'].'\')">Delete</a>] '.
+  				'[<a href="'.$cat['path'].$row['page_key'].'.pageconfig">Settings</a>]</div>'.
   			'<div class="move" style="display: none; padding: 0px 0px 0px 50px;">'.
 				'<form action="/lp-admin.structure.move.'.$row['page_id'].'" method="POST" id="mvfrm'.$row['page_id'].'">'.
 				'Move to: <select name="category">'.$cts.'</select> '.
 				'<input type="text" name="location" size="35" value="'.$row['page_key'].'"> '.
   				'<input type="button" name="submit" value="Submit" onClick="postForm(\'mvfrm'.$row['page_id'].'\')"/></form>'.
+  			'</div>'.
+  			'<div class="nuke" style="display: none; padding: 0px 0px 0px 50px;">'.
+				'<form action="/lp-admin.structure.nuke.'.$row['page_id'].'" method="POST" id="nkfrm'.$row['page_id'].'">'.
+				'Are you sure you want to <b>DELETE</b> this page? Yes: <input name="sure" type="checkbox" value="1"/> '.
+  				'<input type="button" name="submit" value="Submit" onClick="postForm(\'nkfrm'.$row['page_id'].'\')"/></form>'.
   			'</div>'.
   			'</li>';
   }
@@ -160,11 +166,32 @@ if (isset($vfile[2]))
 		    
 			die('reloadCat('.$target['page_category'].');');
 			
+		case "nuke":
+			if (!isset($_POST['sure']) || $_POST['sure'] != 1)
+				die();
+			
+			$page_id = mysql_real_escape_string($vfile[3]);
+
+			$results = mysql_do_query("SELECT * FROM `cms_pages` WHERE `page_id` = '".$page_id."'");
+			if (mysql_num_rows($results) != 1)
+				die();
+				
+			$target = mysql_fetch_assoc($results);
+			
+			mysql_do_query("DELETE FROM `cms_sections` WHERE `page_id`='$page_id'");
+			mysql_do_query("DELETE FROM `cms_pages` WHERE `page_id`='$page_id'");
+		
+			die('reloadCat('.$target['page_category'].');');
+			
 		case "catList":
 			die(makeCatListDiv($tree['tree']));
 			
 		default:
 			die(makePagesDiv($tree['ids'][$vfile[2]]));
+
+			//$f = str_replace("\n"," ",print_r($_POST,true));
+			//die('alert(\''.addslashes($f).'\');');	
+			
 	}
 }
 
