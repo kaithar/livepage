@@ -8,12 +8,19 @@ function makePagesDiv($cat)
 {
 	global $tree;
 	$cts = "";
+	$scts = "";
 	foreach ($tree['flat'] as $tcat)
 	{
 		$cts .= "<option value=\"{$tcat['cat_id']}\"".(($tcat['cat_id'] == $cat['cat_id'])?" selected=\"selected\"":"").">";
 		$cts .= $tcat['path']."</option>";
+		$foo = strpos($tcat['path'], $cat['path']);
+		if (($foo === FALSE) || ($foo > 1))
+		{
+			$scts .= "<option value=\"{$tcat['cat_id']}\"".(($tcat['cat_id'] == $cat['cat_parent'])?" selected=\"selected\"":"").">";
+			$scts .= $tcat['path']."</option>";
+		}
 	}
-
+	
   $result = mysql_do_query("SELECT *
 		                      FROM `cms_pages` 
 				             WHERE `page_category` = '".mysql_real_escape_string($cat['cat_id'])."'");
@@ -21,7 +28,10 @@ function makePagesDiv($cat)
   		"[<a href=\"javascript:hideAllDetails()\">Collapse all</a>] ".
 		"[<a href=\"javascript:showNewFolder()\">New Subfolder</a>] ".
 		"[<a href=\"javascript:showNewPage()\">New Page</a>] ".
-		"[<a href=\"javascript:showNukeCat()\">Delete folder</a>] ".
+		($cat['cat_id'] == 1 ? '' :
+			"[<a href=\"javascript:showMoveCat()\">Move folder</a>] ".
+  			"[<a href=\"javascript:showNukeCat()\">Delete folder</a>] "
+		).
   		"<br/>".
   	'<div id="newFolder" style="display: none; padding: 10px;">'.
   		'<form action="/lp-admin.structure.newFolder.'.$cat['cat_id'].'" method="POST" id="newFolderForm">'.
@@ -32,6 +42,12 @@ function makePagesDiv($cat)
   		'<form action="/lp-admin.structure.newPage.'.$cat['cat_id'].'" method="POST" id="newPageForm">'.
 			"Create page ".$cat['path']." <input type=\"text\" name=\"page_name\" size=\"35\" value=\"\"/> ".
 			"<input type=\"button\" name=\"submit\" value=\"Submit\" onClick=\"postForm('newPageForm')\"/></form>".
+	'</div>'.
+	'<div id="moveCat" style="display: none; padding: 0px 0px 0px 50px;">'.
+		'<form action="/lp-admin.structure.moveCat.'.$cat['cat_id'].'" method="POST" id="mvCatfrm">'.
+				'Move to: <select name="category">'.$scts.'</select> '.
+				'<input type="text" name="location" size="35" value="'.$cat['cat_key'].'"> '.
+  				'<input type="button" name="submit" value="Submit" onClick="postForm(\'mvCatfrm\')"/></form>'.
 	'</div>'.
 	'<div id="nukeCat" style="display: none; padding: 0px 0px 0px 50px;">'.
 		'<form action="/lp-admin.structure.nukeCat.'.$cat['cat_id'].'" method="POST" id="nukeCatFrm">'.
@@ -97,6 +113,10 @@ if (isset($vfile[2]))
 				die("alert('Please supply a folder name');");
 			$key = mysql_real_escape_string($key);
 
+			if (!preg_match("/^[a-zA-Z0-9_\!()\^]+$/", $key))
+		    	die("alert(\"Please use only letters (a to z), numbers (0-9), '_', '!', '(', ')' and '^' in key names.<br/>".
+		    		"If you feel that this range is insufficent, please file a bug report.\")");
+			
 			$results = mysql_do_query("SELECT * FROM `cms_pages`
 				WHERE `page_key` = '".mysql_real_escape_string($key)."'
 				  AND `page_category` = '".mysql_real_escape_string($vfile[3])."'");
@@ -122,6 +142,11 @@ if (isset($vfile[2]))
 			if ($key == "")
 				die("alert('Please supply a page name');");
 			$key = mysql_real_escape_string($key);
+
+			if (!preg_match("/^[a-zA-Z0-9_\!()\^]+$/", $key))
+		    	die("alert(\"Please use only letters (a to z), numbers (0-9), '_', '!', '(', ')' and '^' in key names.<br/>".
+		    		"If you feel that this range is insufficent, please file a bug report.\")");
+			
 			$results = mysql_do_query("SELECT * FROM `cms_pages`
 				WHERE `page_key` = '".mysql_real_escape_string($key)."'
 				  AND `page_category` = '".mysql_real_escape_string($vfile[3])."'");
@@ -222,6 +247,39 @@ if (isset($vfile[2]))
 			mysql_do_query("DELETE FROM `cms_categories` WHERE `cat_id`='$cat_id'");
 		
 			die('reloadCats(); showCat('.$target['cat_parent'].');');
+		
+		case "moveCat":
+			$cat_id = mysql_real_escape_string($vfile[3]);
+
+			$results = mysql_do_query("SELECT * FROM `cms_categories` WHERE `cat_id` = '".$cat_id."'");
+			if (mysql_num_rows($results) != 1)
+				die();
+
+			$target = mysql_fetch_assoc($results);
+			
+			if ($target['cat_id'] == 1)
+				die("alert('You can\'t move or rename the root folder.  That would be silly.');");
+				
+			$category = mysql_real_escape_string($_POST['category']);
+			$location = mysql_real_escape_string($_POST['location']);
+			if (!preg_match("/^[a-zA-Z0-9_\!()\^]+$/", $location))
+		    	die("alert(\"Please use only letters (a to z), numbers (0-9), '_', '!', '(', ')' and '^' in key names.<br/>".
+		    		"If you feel that this range is insufficent, please file a bug report.\")");
+			
+			
+			$results = mysql_do_query("SELECT * FROM `cms_pages` WHERE `page_key` = '".$location."' AND `page_category` = '".$category."'");
+			$pages = mysql_num_rows($results);
+			if ($pages != 0)
+				die("alert('A page already exists at that location.');");
+
+			$results = mysql_do_query("SELECT * FROM `cms_categories` WHERE `cat_key` = '".$location."' AND `cat_parent` = '".$category."'");
+			$pages = mysql_num_rows($results);
+			if ($pages != 0)
+				die("alert('A folder already exists at that location.');");
+				
+			mysql_do_query("UPDATE `cms_categories` SET `cat_key` = '".$location."', `cat_parent` = '".$category."' WHERE `cat_id`='$cat_id'");
+		
+			die('reloadCats(); showCat('.$cat_id.');');
 		
 			$f = str_replace("\n"," ",print_r($_POST,true));
 			die('alert(\''.addslashes($f).'\');');	
