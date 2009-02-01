@@ -21,6 +21,7 @@ function makePagesDiv($cat)
   		"[<a href=\"javascript:hideAllDetails()\">Collapse all</a>] ".
 		"[<a href=\"javascript:showNewFolder()\">New Subfolder</a>] ".
 		"[<a href=\"javascript:showNewPage()\">New Page</a>] ".
+		"[<a href=\"javascript:showNukeCat()\">Delete folder</a>] ".
   		"<br/>".
   	'<div id="newFolder" style="display: none; padding: 10px;">'.
   		'<form action="/lp-admin.structure.newFolder.'.$cat['cat_id'].'" method="POST" id="newFolderForm">'.
@@ -32,7 +33,12 @@ function makePagesDiv($cat)
 			"Create page ".$cat['path']." <input type=\"text\" name=\"page_name\" size=\"35\" value=\"\"/> ".
 			"<input type=\"button\" name=\"submit\" value=\"Submit\" onClick=\"postForm('newPageForm')\"/></form>".
 	'</div>'.
-	"<br/>".
+	'<div id="nukeCat" style="display: none; padding: 0px 0px 0px 50px;">'.
+		'<form action="/lp-admin.structure.nukeCat.'.$cat['cat_id'].'" method="POST" id="nukeCatFrm">'.
+		'Are you sure you want to <b>DELETE</b> this folder? Yes: <input name="sure" type="checkbox" value="1"/> '.
+		'<input type="button" name="submit" value="Submit" onClick="postForm(\'nukeCatFrm\')"/></form>'.
+	'</div>'.
+  "<br/>".
   	"Trail: ".$cat['flat_path']."<br/>".
 	"Path: ".$cat['path']."<br/><ul>";
   while ($row = mysql_fetch_assoc($result))
@@ -182,15 +188,49 @@ if (isset($vfile[2]))
 			mysql_do_query("DELETE FROM `cms_pages` WHERE `page_id`='$page_id'");
 		
 			die('reloadCat('.$target['page_category'].');');
+
+		case "nukeCat":
+			if (!isset($_POST['sure']) || $_POST['sure'] != 1)
+				die();
+			
+			$cat_id = mysql_real_escape_string($vfile[3]);
+
+			$results = mysql_do_query("SELECT * FROM `cms_categories` WHERE `cat_id` = '".$cat_id."'");
+			if (mysql_num_rows($results) != 1)
+				die();
+
+			$target = mysql_fetch_assoc($results);
+			
+			if ($target['cat_id'] == 1)
+				die("alert('You can\'t delete the root folder.  That would be silly.');");
+				
+			$results = mysql_do_query("SELECT * FROM `cms_pages` WHERE `page_category` = '".$cat_id."'");
+			$pages = mysql_num_rows($results);
+			if ($pages != 0)
+				die("alert('Folder is not empty.  ".$pages." pages remaining.');");
+
+			$results = mysql_do_query("SELECT * FROM `cms_categories` WHERE `cat_parent` = '".$cat_id."'");
+			$pages = mysql_num_rows($results);
+			if ($pages != 0)
+				die("alert('Folder is not empty.  ".$pages." direct subfolders remaining.');");
+
+			$results = mysql_do_query("SELECT * FROM `cms_menu` WHERE `item_category` = '".$cat_id."'");
+			$pages = mysql_num_rows($results);
+			if ($pages != 0)
+				die("alert('Folder is not empty.  ".$pages." menu items remaining.');");
+				
+			mysql_do_query("DELETE FROM `cms_categories` WHERE `cat_id`='$cat_id'");
+		
+			die('reloadCats(); showCat('.$target['cat_parent'].');');
+		
+			$f = str_replace("\n"," ",print_r($_POST,true));
+			die('alert(\''.addslashes($f).'\');');	
 			
 		case "catList":
 			die(makeCatListDiv($tree['tree']));
 			
 		default:
 			die(makePagesDiv($tree['ids'][$vfile[2]]));
-
-			//$f = str_replace("\n"," ",print_r($_POST,true));
-			//die('alert(\''.addslashes($f).'\');');	
 			
 	}
 }

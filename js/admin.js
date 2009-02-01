@@ -70,6 +70,7 @@ function hideAllDetails() {	$('#pagesDiv li div').slideUp(200); }
 
 function showNewFolder() {	$('#newFolder').slideToggle(200); }
 function showNewPage() {	$('#newPage').slideToggle(200); }
+function showNukeCat() {	$('#nukeCat').slideToggle(200); }
 
 function showAllCats() {	$('#catsDiv div[id*=cat]').slideDown(200); $('#catsDiv a[id*=a]').html("-"); }
 function hideAllCats() {	$('#catsDiv div[id*=cat]').slideUp(200); $('#catsDiv a[id*=a]').html("+"); }
