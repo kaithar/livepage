@@ -27,7 +27,8 @@ function makePagesDiv($cat)
   $c = "<div>[<a href=\"javascript:showAllDetails()\">Expand all</a>] ".
   		"[<a href=\"javascript:hideAllDetails()\">Collapse all</a>] ".
 		"[<a href=\"javascript:showNewFolder()\">New Subfolder</a>] ".
-		"[<a href=\"javascript:showNewPage()\">New Page</a>] ".
+		"[<a href=\"javascript:showNewPage()\">New Page</a>]<br/>".
+		"[<a href=\"javascript:showTitleCat()\">Change title</a>] ".
 		($cat['cat_id'] == 1 ? '' :
 			"[<a href=\"javascript:showMoveCat()\">Move folder</a>] ".
   			"[<a href=\"javascript:showNukeCat()\">Delete folder</a>] "
@@ -42,6 +43,11 @@ function makePagesDiv($cat)
   		'<form action="/lp-admin.structure.newPage.'.$cat['cat_id'].'" method="POST" id="newPageForm">'.
 			"Create page ".$cat['path']." <input type=\"text\" name=\"page_name\" size=\"35\" value=\"\"/> ".
 			"<input type=\"button\" name=\"submit\" value=\"Submit\" onClick=\"postForm('newPageForm')\"/></form>".
+	'</div>'.
+  	'<div id="titleCat" style="display: none; padding: 10px;">'.
+  		'<form action="/lp-admin.structure.titleCat.'.$cat['cat_id'].'" method="POST" id="titleCatForm">'.
+			"Title: <input type=\"text\" name=\"title\" size=\"35\" value=\"".$cat['cat_title']."\"/> ".
+			"<input type=\"button\" name=\"submit\" value=\"Submit\" onClick=\"postForm('titleCatForm')\"/></form>".
 	'</div>'.
 	'<div id="moveCat" style="display: none; padding: 0px 0px 0px 50px;">'.
 		'<form action="/lp-admin.structure.moveCat.'.$cat['cat_id'].'" method="POST" id="mvCatfrm">'.
@@ -278,6 +284,19 @@ if (isset($vfile[2]))
 				die("alert('A folder already exists at that location.');");
 				
 			mysql_do_query("UPDATE `cms_categories` SET `cat_key` = '".$location."', `cat_parent` = '".$category."' WHERE `cat_id`='$cat_id'");
+		
+			die('reloadCats(); showCat('.$cat_id.');');
+		
+		case "titleCat":
+			$cat_id = mysql_real_escape_string($vfile[3]);
+
+			$results = mysql_do_query("SELECT * FROM `cms_categories` WHERE `cat_id` = '".$cat_id."'");
+			if (mysql_num_rows($results) != 1)
+				die();
+
+			$title = mysql_real_escape_string($_POST['title']);
+
+			mysql_do_query("UPDATE `cms_categories` SET `cat_title` = '".$title."' WHERE `cat_id`='$cat_id'");
 		
 			die('reloadCats(); showCat('.$cat_id.');');
 		

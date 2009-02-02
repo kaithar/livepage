@@ -70,6 +70,7 @@ function hideAllDetails() {	$('#pagesDiv li div').slideUp(200); }
 
 function showNewFolder() {	$('#newFolder').slideToggle(200); }
 function showNewPage() {	$('#newPage').slideToggle(200); }
+function showTitleCat() {	$('#titleCat').slideToggle(200); }
 function showMoveCat() {	$('#moveCat').slideToggle(200); }
 function showNukeCat() {	$('#nukeCat').slideToggle(200); }
 
