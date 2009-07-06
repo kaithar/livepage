@@ -1,15 +1,15 @@
 function viewPage (name)
 {
-  $("#adminbody").html("<i>Loading...</i>");
+  $("#td_content").html("<i>Loading...</i>");
 
   $.ajax({
     type: "GET",
-    url: "/lp-admin."+name,
+    url: '/raw'+name,
     cache: false,
     dataType: "html",
     success: function (data)
     {
-	  $("#adminbody").html(data)
+	  $("#td_content").html(data)
     }
   });
 }
@@ -26,9 +26,13 @@ function postForm (name)
 	
 	  $.ajax({
 	    type: "POST",
-	    url: $("#"+name).attr("action"),
+	    url: "/raw"+$("#"+name).attr("action"),
 	    data: dataString,
-	    dataType: "script"
+	    dataType: "html",
+			success: function (data)
+			{
+				$("#td_content").html(data)
+			}
 	  });
 	  return false;
 
@@ -161,6 +165,21 @@ function reloadCat (id)
 		    }
 	  });
 
+}
+
+
+function sidebarsSortable ()
+{
+	$("ul.miList").sortable({connectWith: ['.miList']});
+}
+
+var nextMi = 1;
+
+function newSep()
+{
+	$("ul#trash").append('<li id="mi_'+nextMi+'" class="mi" style="border: 1px solid #999; margin: 4px; padding: 2px; width: 133px;"><i>---Separator---</i></li>');
+	nextMi += 1;
+	$("ul#trash").sortable("refresh");
 }
 
 //document.onmousemove = mouseMove;
